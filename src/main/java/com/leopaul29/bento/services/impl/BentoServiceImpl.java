@@ -26,9 +26,8 @@ public class BentoServiceImpl implements BentoService {
     @Override
     public BentoDto saveBento(BentoDto bentoDto) {
         Bento bento = bentoMapper.toEntity(bentoDto);
-        bento = this.bentoRepository.save(bento);
-        bentoDto.setId(bento.getId());
-        return bentoDto;
+        Bento saved = this.bentoRepository.save(bento);
+        return bentoMapper.toDto(saved);
     }
 
     @Override
@@ -39,9 +38,7 @@ public class BentoServiceImpl implements BentoService {
 
     @Override
     public List<BentoDto> getAllBentos() {
-        return bentoRepository.findAll().stream()
-                .map(bentoMapper::toDto)
-                .collect(Collectors.toList());
+        return bentoMapper.toDtoList(bentoRepository.findAll());
     }
 
     @Override

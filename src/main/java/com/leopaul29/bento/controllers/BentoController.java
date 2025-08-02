@@ -20,12 +20,12 @@ public class BentoController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<BentoDto>> getBentos() {
+    public ResponseEntity<List<BentoDto>> getAllBentos() {
         return ResponseEntity.ok(bentoService.getAllBentos());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BentoDto> getBento(@PathVariable("id") Long bentoId) {
+    public ResponseEntity<BentoDto> getBentoById(@PathVariable("id") Long bentoId) {
         return ResponseEntity.ok(bentoService.getBentoById(bentoId));
     }
 
