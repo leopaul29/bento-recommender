@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class BentoServiceImpl implements BentoService{
@@ -33,6 +34,13 @@ public class BentoServiceImpl implements BentoService{
     public BentoDto getBentoById(Long id) throws EntityNotFoundException {
         Bento bento = this.bentoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Invalid Bento id: "+id));
         return bentoMapper.toDto(bento);
+    }
+
+    @Override
+    public List<BentoDto> getAllBentos() {
+        return bentoRepository.findAll().stream()
+                .map(bentoMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override

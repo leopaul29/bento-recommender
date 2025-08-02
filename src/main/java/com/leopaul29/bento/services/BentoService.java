@@ -12,6 +12,7 @@ import java.util.Set;
 public interface BentoService {
     public BentoDto saveBento(BentoDto bento);
     public BentoDto getBentoById(Long id) throws EntityNotFoundException;
+    public List<BentoDto> getAllBentos();
     public List<Bento> findBentosByTags(Set<Tag> tags);
     public List<Bento> findBentosByIngredients(Set<Ingredient> ingredients);
     public Bento getRandomBento();

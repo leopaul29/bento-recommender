@@ -7,14 +7,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/bentos")
+@RequestMapping("/api/bentos")
 public class BentoController {
 
     private final BentoService bentoService;
 
     public BentoController(BentoService bentoService) {
         this.bentoService = bentoService;
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<BentoDto>> getBentos() {
+        return ResponseEntity.ok(bentoService.getAllBentos());
     }
 
     @GetMapping("/{id}")
