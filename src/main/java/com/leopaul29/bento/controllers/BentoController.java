@@ -1,9 +1,8 @@
 package com.leopaul29.bento.controllers;
 
 import com.leopaul29.bento.dtos.BentoDto;
-import com.leopaul29.bento.entities.Bento;
 import com.leopaul29.bento.services.BentoService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,16 +11,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/bentos")
 public class BentoController {
 
-    @Autowired
-    private BentoService bentoService;
+    private final BentoService bentoService;
+
+    public BentoController(BentoService bentoService) {
+        this.bentoService = bentoService;
+    }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BentoDto> getBento(@PathVariable("id") Long BentoId) {
-        return ResponseEntity.ok(bentoService.getBentoById(BentoId));
+    public ResponseEntity<BentoDto> getBento(@PathVariable("id") Long bentoId) {
+        return ResponseEntity.ok(bentoService.getBentoById(bentoId));
     }
 
     @PostMapping
-    public ResponseEntity<Bento> createBento(@RequestBody BentoDto bentoDto) {
+    public ResponseEntity<BentoDto> createBento(@Valid @RequestBody BentoDto bentoDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.bentoService.saveBento(bentoDto));
     }
 }

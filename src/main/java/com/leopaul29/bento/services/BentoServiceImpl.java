@@ -6,6 +6,7 @@ import com.leopaul29.bento.entities.Ingredient;
 import com.leopaul29.bento.entities.Tag;
 import com.leopaul29.bento.mappers.BentoMapper;
 import com.leopaul29.bento.repositories.BentoRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,14 +22,16 @@ public class BentoServiceImpl implements BentoService{
     private BentoMapper bentoMapper;
 
     @Override
-    public Bento saveBento(BentoDto bentoDto) {
+    public BentoDto saveBento(BentoDto bentoDto) {
         Bento bento = bentoMapper.toEntity(bentoDto);
-        return this.bentoRepository.save(bento);
+        bento = this.bentoRepository.save(bento);
+        bentoDto.setId(bento.getId());
+        return bentoDto;
     }
 
     @Override
-    public BentoDto getBentoById(Long id) {
-        Bento bento = this.bentoRepository.findById(id).orElseThrow(() -> new RuntimeException("Bento not found"));
+    public BentoDto getBentoById(Long id) throws EntityNotFoundException {
+        Bento bento = this.bentoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Invalid Bento id: "+id));
         return bentoMapper.toDto(bento);
     }
 
