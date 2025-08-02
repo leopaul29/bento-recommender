@@ -1,4 +1,4 @@
-package com.leopaul29.bento.services;
+package com.leopaul29.bento.services.impl;
 
 import com.leopaul29.bento.dtos.BentoDto;
 import com.leopaul29.bento.entities.Bento;
@@ -6,6 +6,7 @@ import com.leopaul29.bento.entities.Ingredient;
 import com.leopaul29.bento.entities.Tag;
 import com.leopaul29.bento.mappers.BentoMapper;
 import com.leopaul29.bento.repositories.BentoRepository;
+import com.leopaul29.bento.services.BentoService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class BentoServiceImpl implements BentoService{
+public class BentoServiceImpl implements BentoService {
 
     @Autowired
     private BentoRepository bentoRepository;
