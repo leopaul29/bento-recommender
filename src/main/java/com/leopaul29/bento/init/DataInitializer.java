@@ -42,6 +42,8 @@ public class DataInitializer implements CommandLineRunner {
         bento.setIngredients(Set.of(tofu, rice));
         bento.setTags(Set.of(vegan));
 
-        bentoRepository.saveAndFlush(bento);
+        bentoRepository.save(bento);
+
+        System.out.println("✅ Bento inserted: " + bento.getName());
     }
 }
