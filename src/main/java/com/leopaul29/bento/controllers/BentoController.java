@@ -33,4 +33,10 @@ public class BentoController {
     public ResponseEntity<BentoDto> createBento(@Valid @RequestBody BentoDto bentoDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.bentoService.saveBento(bentoDto));
     }
+
+    // GET /recommendation?userId=1
+    @GetMapping("/recommendation")
+    public ResponseEntity<List<BentoDto>> getAllRecommendedBentos(@RequestParam("userId") Long userId) {
+        return ResponseEntity.ok(bentoService.getRecommendedForUserId(userId));
+    }
 }

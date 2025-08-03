@@ -51,12 +51,12 @@ public class DataInitializer implements CommandLineRunner {
         bento.setTags(Set.of(vegan));
 
         bentoRepository.save(bento);
-
         System.out.println("✅ Bento inserted: " + bento.getName());
         
         User user = new User();
         user.setLikedTags(Set.of(vegan, japanese));
         user.setDislikedIngredients(Set.of(beef));
         userRepository.save(user);
+        System.out.println("✅ User inserted: " + user.getId());
     }
 }

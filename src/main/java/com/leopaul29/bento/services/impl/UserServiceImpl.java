@@ -23,4 +23,9 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Invalid User id: " + id));
         return userMapper.toUserPreferenceDto(user);
     }
+
+    @Override
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Invalid User id: " + id));
+    }
 }

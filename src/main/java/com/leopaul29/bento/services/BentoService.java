@@ -16,4 +16,5 @@ public interface BentoService {
     public List<Bento> findBentosByTags(Set<Tag> tags);
     public List<Bento> findBentosByIngredients(Set<Ingredient> ingredients);
     public Bento getRandomBento();
+    public List<BentoDto> getRecommendedForUserId(Long userId);
 }
