@@ -11,4 +11,5 @@ public interface IngredientMapper {
     IngredientDto toDto(Ingredient ingredient);
     Ingredient toEntity(IngredientDto IngredientDto);
     List<IngredientDto> toDtoList(List<Ingredient> ingredientList);
+    List<Ingredient> toEntityList(List<IngredientDto> ingredientDtoList);
 }

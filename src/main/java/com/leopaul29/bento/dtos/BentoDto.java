@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
+import java.util.List;
 
 @Setter
 @Getter
@@ -14,10 +14,9 @@ public class BentoDto {
     @NotBlank
     private String name;
     private String description;
-    @NotBlank
     private int calorie;
     @NotEmpty
-    private Set<IngredientDto> ingredients;
+    private List<IngredientDto> ingredients;
     @NotEmpty
-    private Set<TagDto> tags;
+    private List<TagDto> tags;
 }
