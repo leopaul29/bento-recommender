@@ -3,9 +3,11 @@ package com.leopaul29.bento.init;
 import com.leopaul29.bento.entities.Bento;
 import com.leopaul29.bento.entities.Ingredient;
 import com.leopaul29.bento.entities.Tag;
+import com.leopaul29.bento.entities.User;
 import com.leopaul29.bento.repositories.BentoRepository;
 import com.leopaul29.bento.repositories.IngredientRepository;
 import com.leopaul29.bento.repositories.TagRepository;
+import com.leopaul29.bento.repositories.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -17,23 +19,29 @@ public class DataInitializer implements CommandLineRunner {
     private final BentoRepository bentoRepository;
     private final IngredientRepository ingredientRepository;
     private final TagRepository tagRepository;
+    private final UserRepository userRepository;
 
     public DataInitializer(BentoRepository bentoRepository,
                            IngredientRepository ingredientRepository,
-                           TagRepository tagRepository) {
+                           TagRepository tagRepository,
+                           UserRepository userRepository) {
         this.bentoRepository = bentoRepository;
         this.ingredientRepository = ingredientRepository;
         this.tagRepository = tagRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
     public void run(String... args) {
         System.out.println("🌱 Bento data inserted");
 
-        Ingredient tofu = ingredientRepository.save(new Ingredient(null, "tofu"));
-        Ingredient rice = ingredientRepository.save(new Ingredient(null, "rice"));
+        var beef = ingredientRepository.save(new Ingredient(null, "beef"));
+        var rice = ingredientRepository.save(new Ingredient(null, "rice"));
+        var tofu = ingredientRepository.save(new Ingredient(null, "tofu"));
 
-        Tag vegan = tagRepository.save(new Tag(null, "vegan"));
+        var spicy = tagRepository.save(new Tag(null, "spicy"));
+        var vegan = tagRepository.save(new Tag(null, "vegan"));
+        var japanese = tagRepository.save(new Tag(null, "japanese"));
 
         Bento bento = new Bento();
         bento.setName("Tofu Delight");
@@ -45,5 +53,11 @@ public class DataInitializer implements CommandLineRunner {
         bentoRepository.save(bento);
 
         System.out.println("✅ Bento inserted: " + bento.getName());
+        
+        var user = new User();
+        user.setId(1L);
+        user.setLikedTags(Set.of(vegan, japanese));
+        user.setDislikedIngredients(Set.of(beef));
+        userRepository.save(user);
     }
 }
