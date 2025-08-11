@@ -19,16 +19,25 @@ public class BentoController {
         this.bentoService = bentoService;
     }
 
+    // GET
     @GetMapping()
     public ResponseEntity<List<BentoDto>> getAllBentos() {
         return ResponseEntity.ok(bentoService.getAllBentos());
     }
 
+    // GET /{id}
     @GetMapping("/{id}")
     public ResponseEntity<BentoDto> getBentoById(@PathVariable("id") Long bentoId) {
         return ResponseEntity.ok(bentoService.getBentoById(bentoId));
     }
 
+    // GET /rand
+    @GetMapping("/rand")
+    public ResponseEntity<BentoDto> getRandomBento() {
+        return ResponseEntity.ok(bentoService.getRandomBento());
+    }
+
+    // POST
     @PostMapping
     public ResponseEntity<BentoDto> createBento(@Valid @RequestBody BentoDto bentoDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.bentoService.saveBento(bentoDto));

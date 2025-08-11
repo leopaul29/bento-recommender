@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -68,8 +69,11 @@ public class BentoServiceImpl implements BentoService {
     }
 
     @Override
-    public Bento getRandomBento() {
-        return null;
+    public BentoDto getRandomBento() {
+        List<Bento> bentoList = bentoRepository.findAll();
+        Random rand = new Random();
+        int randomIndex = rand.nextInt(bentoList.size());
+        return bentoMapper.toDto(bentoList.get(randomIndex));
     }
 
     @Override
