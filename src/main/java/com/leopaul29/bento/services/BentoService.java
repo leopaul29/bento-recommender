@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Set;
 
 public interface BentoService {
-    public BentoDto saveBento(BentoDto bento);
-    public BentoDto getBentoById(Long id) throws EntityNotFoundException;
-    public List<BentoDto> getAllBentos();
-    public List<Bento> findBentosByTags(Set<Tag> tags);
-    public List<Bento> findBentosByIngredients(Set<Ingredient> ingredients);
-    public BentoDto getRandomBento();
-    public List<BentoDto> getRecommendedForUserId(Long userId);
+    BentoDto saveBento(BentoDto bento);
+    BentoDto getBentoById(Long id) throws EntityNotFoundException;
+    List<BentoDto> getAllBentos();
+    List<Bento> findBentosByTags(Set<Tag> tags);
+    List<Bento> findBentosByIngredients(Set<Ingredient> ingredients);
+    BentoDto getRandomBento();
+    List<BentoDto> getRecommendedForUserId(Long userId);
 }
