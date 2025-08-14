@@ -11,8 +11,8 @@
 | ✅ 完了   | `DELETE /bentos/{id}`                    | Bento削除                             | 高   |
 | 🚧 未着手 | Ingredient API                           | CRUD実装                              | 中   |
 | 🚧 未着手 | Tag API                                  | CRUD実装                              | 中   |
-| ✅ 完了 | `POST /users/{id}/preferences`           | ユーザー嗜好設定                            | 高   |
-| 🚧 未着手 | Recommendation Controller分離              | RecommendationService作成             | 中   |
+| ✅ 完了   | `POST /users/{id}/preferences`           | ユーザー嗜好設定                            | 高   |
+| ✅ 完了   | Recommendation Controller分離              | RecommendationService作成             | 中   |
 | 🚧 未着手 | 推薦アルゴリズム強化                               | タグ一致率・スコアリング                        | 低   |
 | 🚧 未着手 | Dummy Data初期化                            | DataInitializer作成                   | 中   |
 | 🚧 未着手 | APIテスト環境整備                               | Postman / MockMvc / @SpringBootTest | 中   |
@@ -34,7 +34,7 @@
 
     * `POST /users/{id}/preferences`
 
-4. **推薦機能の分離**
+4. **推薦機能の分離**✅
 
     * `RecommendationController` + `RecommendationService`
 

@@ -21,7 +21,4 @@ public interface BentoService {
     BentoDto saveBento(BentoDto bentoDto);
     BentoDto updateBento(Long id, BentoDto bentoDto);
     void deleteBento(Long id);
-
-    // recommendation
-    List<BentoDto> getRecommendedForUserId(Long userId);
 }

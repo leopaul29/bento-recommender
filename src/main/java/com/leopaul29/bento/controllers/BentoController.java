@@ -74,10 +74,4 @@ public class BentoController {
         this.bentoService.deleteBento(bentoId);
         return new ResponseEntity<String>("Bento deleted: "+bentoId, HttpStatus.ACCEPTED);
     }
-
-    // GET /recommendation?userId=1
-    @GetMapping("/recommendation")
-    public ResponseEntity<List<BentoDto>> getAllRecommendedBentos(@RequestParam("userId") Long userId) {
-        return ResponseEntity.ok(bentoService.getRecommendedForUserId(userId));
-    }
 }
