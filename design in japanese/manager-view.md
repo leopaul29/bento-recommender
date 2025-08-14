@@ -7,8 +7,8 @@
 | ✅ 完了   | `POST /bentos`                           | Bento作成                             | 高   |
 | ✅ 完了   | `GET /users/{id}`                        | ユーザーと嗜好情報取得                         | 中   |
 | ✅ 完了   | `GET /bentos/recommendation?userId={id}` | ユーザーの嗜好に基づく推薦                       | 中   |
-| 🚧 未着手 | `PUT /bentos/{id}`                       | Bento更新                             | 高   |
-| 🚧 未着手 | `DELETE /bentos/{id}`                    | Bento削除                             | 高   |
+| ✅ 完了   | `PUT /bentos/{id}`                       | Bento更新                             | 高   |
+| ✅ 完了   | `DELETE /bentos/{id}`                    | Bento削除                             | 高   |
 | 🚧 未着手 | Ingredient API                           | CRUD実装                              | 中   |
 | 🚧 未着手 | Tag API                                  | CRUD実装                              | 中   |
 | 🚧 未着手 | `POST /users/{id}/preferences`           | ユーザー嗜好設定                            | 高   |
@@ -21,7 +21,7 @@
 
 ## 🛠 開発の流れ（推奨順序）
 
-1. **Bento CRUD 完成**
+1. **Bento CRUD 完成**✅
 
     * `PUT /bentos/{id}`
     * `DELETE /bentos/{id}`

@@ -52,7 +52,7 @@ public class BentoController {
     @GetMapping("/rand")
     public ResponseEntity<BentoDto> getRandomBento() {
         BentoDto randomBento = bentoService.getRandomBento();
-        if(randomBento == null) return new ResponseEntity(HttpStatus.NO_CONTENT);
+        if(randomBento == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return ResponseEntity.ok(randomBento);
     }
 
