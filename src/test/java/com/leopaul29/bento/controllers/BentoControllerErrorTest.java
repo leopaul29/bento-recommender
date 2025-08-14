@@ -13,12 +13,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("test")
 @SpringBootTest
 @AutoConfigureMockMvc
-public class BentoControllerTest {
+public class BentoControllerErrorTest {
 
     private final static String BASE_URL = "/api/bentos";
 
@@ -39,32 +39,29 @@ public class BentoControllerTest {
     }
 
     @Test
-    void testGetBentoById() throws Exception {
-        Long id = bentoRepository.findAll().get(0).getId();
+    void testGetBentoByIdNotFound() throws Exception {
+        long id = 42L;
 
         mockMvc.perform(get(BASE_URL + "/" + id)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Test Bento"))
-                .andExpect(jsonPath("$.calorie").value(400));
+                .andExpect(status().isNotFound());
     }
 
     @Test
-    void testCreateBento() throws Exception {
+    void testCreateBentoWithEmptyIngredientsAndTags() throws Exception {
         String json = """
         {
             "name": "Tofu Delight",
             "description": "Light tofu bento with rice",
             "calorie": 350,
-            "ingredients": [{"name":"tofu"},{"name":"rice"}],
-            "tags": [{"name":"vegan"}, {"name":"japanese"}]
+            "ingredients": [],
+            "tags": []
         }
         """;
 
         mockMvc.perform(post(BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value("Tofu Delight"));
+                .andExpect(status().isNotAcceptable());
     }
 }
