@@ -14,7 +14,7 @@
 | ✅ 完了   | `POST /users/{id}/preferences`           | ユーザー嗜好設定                            | 高   |
 | ✅ 完了   | Recommendation Controller分離              | RecommendationService作成             | 中   |
 | 🚧 未着手 | 推薦アルゴリズム強化                               | タグ一致率・スコアリング                        | 低   |
-| 🚧 未着手 | Dummy Data初期化                            | DataInitializer作成                   | 中   |
+| ✅ 完了   | Dummy Data初期化                            | DataInitializer作成                   | 中   |
 | 🚧 未着手 | APIテスト環境整備                               | Postman / MockMvc / @SpringBootTest | 中   |
 
 ---
@@ -38,7 +38,7 @@
 
     * `RecommendationController` + `RecommendationService`
 
-5. **DataInitializer作成**
+5. **DataInitializer作成**✅
 
     * Dummy Data投入
 
