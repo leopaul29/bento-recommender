@@ -1,4 +1,4 @@
-package com.leopaul29.bento.init;
+package com.leopaul29.bento.config;
 
 import com.leopaul29.bento.entities.Bento;
 import com.leopaul29.bento.entities.Ingredient;
