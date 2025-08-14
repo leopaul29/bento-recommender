@@ -44,6 +44,6 @@
 
 6. **テスト環境整備**
 
-    * Postmanコレクション
+    * Postmanコレクション✅
     * MockMvc / SpringBootTest
 
