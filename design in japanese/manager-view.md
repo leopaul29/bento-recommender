@@ -15,7 +15,7 @@
 | ✅ 完了   | Recommendation Controller分離              | RecommendationService作成             | 中   |
 | 🚧 未着手 | 推薦アルゴリズム強化                               | タグ一致率・スコアリング                        | 低   |
 | ✅ 完了   | Dummy Data初期化                            | DataInitializer作成                   | 中   |
-| 🚧 未着手 | APIテスト環境整備                               | Postman / MockMvc / @SpringBootTest | 中   |
+| ✅ 完了   | APIテスト環境整備                               | Postman / MockMvc / @SpringBootTest | 中   |
 
 ---
 
@@ -42,8 +42,8 @@
 
     * Dummy Data投入
 
-6. **テスト環境整備**
+6. **テスト環境整備**✅
 
     * Postmanコレクション✅
-    * MockMvc / SpringBootTest
+    * MockMvc / SpringBootTest✅
 
