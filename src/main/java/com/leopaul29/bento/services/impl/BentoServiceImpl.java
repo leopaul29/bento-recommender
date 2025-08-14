@@ -7,6 +7,7 @@ import com.leopaul29.bento.entities.Tag;
 import com.leopaul29.bento.entities.User;
 import com.leopaul29.bento.mappers.BentoMapper;
 import com.leopaul29.bento.repositories.BentoRepository;
+import com.leopaul29.bento.repositories.UserRepository;
 import com.leopaul29.bento.services.BentoService;
 import com.leopaul29.bento.services.IngredientService;
 import com.leopaul29.bento.services.TagService;
@@ -29,7 +30,7 @@ public class BentoServiceImpl implements BentoService {
     @Autowired
     private IngredientService ingredientService;
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
     @Autowired
     private TagService tagService;
     @Autowired
@@ -100,7 +101,9 @@ public class BentoServiceImpl implements BentoService {
 
     @Override
     public List<BentoDto> getRecommendedForUserId(Long userId) {
-        User user = userService.getUserById(userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Invalid User id: " + userId));
+
+//        User user = userService.getUserById(userId);
 
         Predicate<Bento> excludeDisliked = bento ->
                 Collections.disjoint(
