@@ -15,8 +15,8 @@ public class BentoDto {
     private String name;
     private String description;
     private int calorie;
-    @NotEmpty
+    @NotEmpty(message = "Ingredient list cannot be empty")
     private List<IngredientDto> ingredients;
-    @NotEmpty
+    @NotEmpty(message = "Tag cannot be empty")
     private List<TagDto> tags;
 }
