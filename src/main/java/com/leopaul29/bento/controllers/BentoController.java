@@ -2,9 +2,15 @@ package com.leopaul29.bento.controllers;
 
 import com.leopaul29.bento.dtos.BentoDto;
 import com.leopaul29.bento.services.BentoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,12 +26,23 @@ public class BentoController {
     }
 
     // GET
+    @Operation(summary = "Get all bentos", description = "登録済みの全Bento情報を取得するAPI。")
     @GetMapping()
     public ResponseEntity<List<BentoDto>> getAllBentos() {
         return ResponseEntity.ok(bentoService.getAllBentos());
     }
 
     // GET /{id}
+    @Operation(summary = "Gets bento by ID", description = "Bento must exist")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok", content =
+                    { @Content(mediaType = "application/json", schema =
+                    @Schema(implementation = BentoDto.class)) }),
+            @ApiResponse(responseCode = "400", description = "Invalid ID supplied"),
+            @ApiResponse(responseCode = "404", description = "Bento not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content =
+                    { @Content(mediaType = "application/json", schema =
+                    @Schema(implementation = ErrorResponse.class)) }) })
     @GetMapping("/{id}")
     public ResponseEntity<BentoDto> getBentoById(@PathVariable("id") Long bentoId) {
         return ResponseEntity.ok(bentoService.getBentoById(bentoId));
