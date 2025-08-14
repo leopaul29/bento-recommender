@@ -48,6 +48,26 @@ public class BentoServiceImpl implements BentoService {
     }
 
     @Override
+    public BentoDto updateBento(Long id, BentoDto bentoDto) {
+        Bento bentoToUpdate = this.bentoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Invalid Bento id: "+id));
+
+        Set<Ingredient> allIngredients = ingredientService.saveAndGetIngredientSet(bentoDto.getIngredients());
+        Set<Tag> allTags = tagService.saveAndGetTagSet(bentoDto.getTags());
+        Bento bento = bentoMapper.toEntity(bentoDto);
+        bento.setId(bentoToUpdate.getId());
+        bento.setIngredients(allIngredients);
+        bento.setTags(allTags);
+        Bento update = this.bentoRepository.save(bento);
+        return bentoMapper.toDto(update);
+    }
+
+    @Override
+    public void deleteBento(Long id) {
+        Bento bento = this.bentoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Invalid Bento id: "+id));
+        bentoRepository.delete(bento);
+    }
+
+    @Override
     public BentoDto getBentoById(Long id) throws EntityNotFoundException {
         Bento bento = this.bentoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Invalid Bento id: "+id));
         return bentoMapper.toDto(bento);
@@ -71,6 +91,8 @@ public class BentoServiceImpl implements BentoService {
     @Override
     public BentoDto getRandomBento() {
         List<Bento> bentoList = bentoRepository.findAll();
+        if(bentoList.isEmpty()) return null;
+
         Random rand = new Random();
         int randomIndex = rand.nextInt(bentoList.size());
         return bentoMapper.toDto(bentoList.get(randomIndex));

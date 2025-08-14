@@ -51,13 +51,28 @@ public class BentoController {
     // GET /rand
     @GetMapping("/rand")
     public ResponseEntity<BentoDto> getRandomBento() {
-        return ResponseEntity.ok(bentoService.getRandomBento());
+        BentoDto randomBento = bentoService.getRandomBento();
+        if(randomBento == null) return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok(randomBento);
     }
 
     // POST
     @PostMapping
     public ResponseEntity<BentoDto> createBento(@Valid @RequestBody BentoDto bentoDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.bentoService.saveBento(bentoDto));
+    }
+
+    // PUT
+    @PutMapping("/{id}")
+    public ResponseEntity<BentoDto> updateBento(@PathVariable("id") Long bentoId, @Valid @RequestBody BentoDto bentoDto) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.bentoService.updateBento(bentoId, bentoDto));
+    }
+
+    // DELETE
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> updateBento(@PathVariable("id") Long bentoId) {
+        this.bentoService.deleteBento(bentoId);
+        return new ResponseEntity<String>("Bento deleted: "+bentoId, HttpStatus.ACCEPTED);
     }
 
     // GET /recommendation?userId=1
