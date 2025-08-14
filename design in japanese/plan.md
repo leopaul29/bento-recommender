@@ -1,69 +1,94 @@
-## 📌 現在の進捗状況
+## 📌 開発進捗まとめ
 
-### 実装済み
+### ✅ 実装済み機能
 
 * **Bento API**
 
-    * `GET /bentos`（全件取得）
-    * `GET /bentos/{id}`（1件取得）
-    * `POST /bentos`（作成）
-* **Recommendation API**
+    * `GET /bentos`：全件取得
+    * `GET /bentos/{id}`：ID で取得
+    * `POST /bentos`：新規作成
+    * `PUT /bentos/{id}`：更新
+    * `DELETE /bentos/{id}`：削除
+* **ユーザー嗜好設定 API**
 
-    * `GET /bentos/recommendation?userId={id}`
-      ユーザーの`likedTags`と`dislikedIngredients`を考慮して弁当を推薦
-* **User API**
+    * `POST /users/{id}/preferences`：ユーザーの好み（タグ・食材）を登録
+* **推薦 API**
 
-    * `GET /users/{id}`（嗜好タグ・嫌いな食材付きで取得）
-* **例外処理**
+    * `GET /recommendations?userId=xxx`：ユーザーの嗜好に基づく Bento 推薦
+    * 推薦処理を `BentoController` から `RecommendationController` に分離
+* **データ初期化**
 
-    * `@ControllerAdvice` + `@ExceptionHandler`
-    * `400 Bad Request` / `404 Not Found` / `500 Internal Server Error`
-* **DB連携**
+    * Dummy Data 自動投入（開発・テスト用）
+* **API テスト**
 
-    * `Bento` / `Ingredient` / `Tag` / `User` のエンティティ作成済み
-    * MapStructによるDTO-Entityマッピング
-* **推奨アルゴリズム（簡易版）**
-
-    * likedTagsをすべて含むBentoを推薦
-    * dislikedIngredientsを含まないBentoのみ推薦
+    * Postman コレクション作成
+    * `MockMvc` を利用した API テスト導入
 
 ---
 
-## 🚀 次の開発ステップ（優先度順）
+## 📌 今後の開発計画
 
-1. **Bento CRUD完成**
+### 1. 推薦アルゴリズム強化（推薦アルゴリズム強化）
 
-    * `PUT /bentos/{id}`（更新API）
-    * `DELETE /bentos/{id}`（削除API）
+* **現状課題**
 
-2. **Ingredient & Tag API実装**
+    * 単純なタグ一致 & 食材除外のフィルタのみ
+    * 並び順やスコアリングが未実装
+* **改善方針**
 
-    * `GET /ingredients` / `POST /ingredients`
-    * `GET /tags` / `POST /tags`
-    * 他のCRUDメソッドは必要に応じて追加
+    1. **スコアリング導入**
 
-3. **User嗜好設定API**
+        * タグ一致度（加点方式）
+        * 嫌いな食材含有（減点方式）
+    2. **ランキング化**
 
-    * `POST /users/{id}/preferences`
-      好きなタグ（likedTags）・嫌いな食材（dislikedIngredients）を登録
+        * スコア順にソートし、上位 N 件を返却
+        * デフォルト N=10、`limit` クエリパラメータで変更可能
+    3. **柔軟なフィルタ**
 
-4. **Recommendation専用コントローラー**
+        * カロリー範囲指定（例：`minCalorie` / `maxCalorie`）
+        * 特定タグの必須条件（例：`requiredTag`）
+    4. **将来的な拡張**
 
-    * `/recommendations?userId={id}` を**別コントローラー**に切り出し
-      ビジネスロジックを`RecommendationService`として分離
+        * ユーザーの注文履歴ベースの推薦（協調フィルタリング）
+        * 人気ランキングと組み合わせたハイブリッド方式
 
-5. **推薦アルゴリズム強化**
+---
 
-    * タグの一致数に基づくスコアリング
-    * `Predicate`を使った動的フィルタリング
+### 2. API 拡張
 
-6. **データ初期化（Dummy Data）**
+* **Ingredient API**
 
-    * 日本の弁当・食材・タグをセットした`DataInitializer`
-    * 起動時に自動投入（開発用のみ）
+    * `GET /ingredients`：全件取得
+    * `POST /ingredients`：新規登録
+* **Tag API**
 
-7. **テスト環境の充実**
+    * `GET /tags`：全件取得
+    * `POST /tags`：新規登録
+* **User API**
 
-    * Postmanコレクション作成
-    * `@SpringBootTest`で統合テスト
-    * MockMvcでAPI単体テスト
+    * `GET /users/{id}`：ユーザー詳細（嗜好データ含む）
+
+---
+
+### 3. テスト環境整備
+
+* `application-test.yml` を使用したテスト DB 分離
+* 全 API の正常系・異常系テスト
+* 推薦 API のロジックテスト（スコア計算確認）
+
+---
+
+### 4. 将来的な拡張
+
+* **Spring Security 導入**
+
+    * JWT 認証
+    * ユーザー別データアクセス制御
+* **OpenAPI (Swagger) 導入**
+
+    * API ドキュメント自動生成
+* **Docker Compose 改善**
+
+    * `init.sql` による DB 初期化
+    * 本番/開発/テスト環境の切り替え
