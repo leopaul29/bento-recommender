@@ -1,3 +1,6 @@
+# 🍱 API設計書 - Bento Recommender
+
+### Vocabulary
 
 * **概要 (概要説明)** : Overview (Summary)
 * **処理詳細 (処理の流れ)** : Processing Details (Process Flow)
@@ -5,11 +8,7 @@
 * **出力 (レスポンス仕様)** : Output (Response Specifications)
 * **考慮事項 (バリデーションや制約)** : Considerations (Validation and Constraints)
 
-
 ---
-
-
-# 🍱 API設計書 - Bento Recommender
 
 ## ベースURL
 
