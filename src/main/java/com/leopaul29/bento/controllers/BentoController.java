@@ -1,6 +1,7 @@
 package com.leopaul29.bento.controllers;
 
 import com.leopaul29.bento.dtos.BentoDto;
+import com.leopaul29.bento.dtos.BentoFilterDto;
 import com.leopaul29.bento.services.BentoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,11 +26,10 @@ public class BentoController {
         this.bentoService = bentoService;
     }
 
-    // GET
-    @Operation(summary = "Get all bentos", description = "登録済みの全Bento情報を取得するAPI。")
-    @GetMapping()
-    public ResponseEntity<List<BentoDto>> getAllBentos() {
-        return ResponseEntity.ok(bentoService.getAllBentos());
+    // GET ?ingredientIds=1,..,10&?tagIds=1,..,10&?excludeIngredientIds=1,..,10&?excludeTagIds=1,..,10
+    @GetMapping
+    public ResponseEntity<List<BentoDto>> getBentoWithFilter(BentoFilterDto filterDto) {
+        return ResponseEntity.ok(bentoService.getBentoWithFilter(filterDto));
     }
 
     // GET /{id}
