@@ -1,22 +1,22 @@
 {
-	"id": "121c4086-00b3-47f1-afde-2451b6102124",
+	"id": "1509b950-e846-4596-b323-30e0622d9336",
 	"name": "Bento recommender",
-	"timestamp": "2025-08-14T07:38:21.895Z",
+	"timestamp": "2025-08-16T09:20:40.669Z",
 	"collection_id": "12321675-b00258e1-17cc-432c-844f-111650adf749",
 	"folder_id": 0,
 	"environment_id": "0",
-	"totalPass": 9,
+	"totalPass": 11,
 	"delay": 0,
 	"persist": true,
 	"status": "finished",
-	"startedAt": "2025-08-14T07:38:19.517Z",
+	"startedAt": "2025-08-16T09:20:38.402Z",
 	"totalFail": 1,
 	"results": [
 		{
 			"id": "e510e87d-65f5-46b5-8f54-0250c1140253",
 			"name": "Get all bentos",
 			"url": "localhost:8080/api/bentos",
-			"time": 455,
+			"time": 116,
 			"responseCode": {
 				"code": 200,
 				"name": "OK"
@@ -31,9 +31,40 @@
 				}
 			},
 			"times": [
-				455
+				116
 			],
 			"allTests": [
+				{
+					"Status code is 200": true
+				}
+			]
+		},
+		{
+			"id": "e04419e7-a854-406a-89a5-a32589f9a0d1",
+			"name": "bentos by ingredientIds",
+			"url": "localhost:8080/api/bentos?ingredientIds=2,3",
+			"time": 18,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 2,
+					"fail": 0
+				}
+			},
+			"times": [
+				36,
+				18
+			],
+			"allTests": [
+				{
+					"Status code is 200": true
+				},
 				{
 					"Status code is 200": true
 				}
@@ -43,7 +74,7 @@
 			"id": "f0f59065-6ca3-4096-b197-0a437185de7c",
 			"name": "Get random bento",
 			"url": "localhost:8080/api/bentos/rand",
-			"time": 38,
+			"time": 24,
 			"responseCode": {
 				"code": 200,
 				"name": "OK"
@@ -58,7 +89,7 @@
 				}
 			},
 			"times": [
-				38
+				24
 			],
 			"allTests": [
 				{
@@ -70,7 +101,7 @@
 			"id": "a5a8f155-6f75-42b8-966b-d2f7cdb8c526",
 			"name": "Get bento 1",
 			"url": "localhost:8080/api/bentos/1",
-			"time": 48,
+			"time": 28,
 			"responseCode": {
 				"code": 200,
 				"name": "OK"
@@ -85,7 +116,7 @@
 				}
 			},
 			"times": [
-				48
+				28
 			],
 			"allTests": [
 				{
@@ -97,7 +128,7 @@
 			"id": "57c1de15-cd83-4d55-9733-330578ffc66c",
 			"name": "Post bento",
 			"url": "localhost:8080/api/bentos",
-			"time": 239,
+			"time": 114,
 			"responseCode": {
 				"code": 201,
 				"name": "Created"
@@ -112,7 +143,7 @@
 				}
 			},
 			"times": [
-				239
+				114
 			],
 			"allTests": [
 				{
@@ -124,7 +155,7 @@
 			"id": "957ed3ce-a2a2-46b2-997c-28ce9ef8d4f7",
 			"name": "Post bento draft",
 			"url": "localhost:8080/api/bentos",
-			"time": 56,
+			"time": 59,
 			"responseCode": {
 				"code": 201,
 				"name": "Created"
@@ -139,7 +170,7 @@
 				}
 			},
 			"times": [
-				56
+				59
 			],
 			"allTests": [
 				{
@@ -151,7 +182,7 @@
 			"id": "29149c38-76ab-4dee-a5ba-2c89fa9d1e19",
 			"name": "Update bento",
 			"url": "localhost:8080/api/bentos/1",
-			"time": 84,
+			"time": 66,
 			"responseCode": {
 				"code": 202,
 				"name": "Accepted"
@@ -166,7 +197,7 @@
 				}
 			},
 			"times": [
-				84
+				66
 			],
 			"allTests": [
 				{
@@ -178,7 +209,7 @@
 			"id": "4df8af73-7a92-45ae-b105-e29efc69ef5e",
 			"name": "Delete bento",
 			"url": "localhost:8080/api/bentos/1",
-			"time": 44,
+			"time": 39,
 			"responseCode": {
 				"code": 202,
 				"name": "Accepted"
@@ -193,7 +224,7 @@
 				}
 			},
 			"times": [
-				44
+				39
 			],
 			"allTests": [
 				{
@@ -205,7 +236,7 @@
 			"id": "cd434277-8b9f-4e6b-b99c-1d4a4cb03e48",
 			"name": "Get user 1 preferences",
 			"url": "localhost:8080/api/users/1/preferences",
-			"time": 37,
+			"time": 44,
 			"responseCode": {
 				"code": 200,
 				"name": "OK"
@@ -220,7 +251,7 @@
 				}
 			},
 			"times": [
-				37
+				44
 			],
 			"allTests": [
 				{
@@ -232,7 +263,7 @@
 			"id": "30a342db-dd07-427e-af47-2eeb9da09d90",
 			"name": "Post user preferences",
 			"url": "localhost:8080/api/users/preferences",
-			"time": 51,
+			"time": 41,
 			"responseCode": {
 				"code": 200,
 				"name": "OK"
@@ -247,7 +278,7 @@
 				}
 			},
 			"times": [
-				51
+				41
 			],
 			"allTests": [
 				{
@@ -259,7 +290,7 @@
 			"id": "6aaaa6fd-9e9c-4542-bcc3-db981c2aebd1",
 			"name": "Get recommendation user 1",
 			"url": "localhost:8080/api/recommendation/1",
-			"time": 53,
+			"time": 67,
 			"responseCode": {
 				"code": 200,
 				"name": "OK"
@@ -274,7 +305,7 @@
 				}
 			},
 			"times": [
-				53
+				67
 			],
 			"allTests": [
 				{
@@ -284,11 +315,15 @@
 		}
 	],
 	"count": 1,
-	"totalTime": 1105,
+	"totalTime": 652,
 	"collection": {
 		"requests": [
 			{
 				"id": "e510e87d-65f5-46b5-8f54-0250c1140253",
+				"method": "GET"
+			},
+			{
+				"id": "e04419e7-a854-406a-89a5-a32589f9a0d1",
 				"method": "GET"
 			},
 			{
@@ -325,6 +360,10 @@
 			},
 			{
 				"id": "6aaaa6fd-9e9c-4542-bcc3-db981c2aebd1",
+				"method": "GET"
+			},
+			{
+				"id": "e04419e7-a854-406a-89a5-a32589f9a0d1",
 				"method": "GET"
 			}
 		]
