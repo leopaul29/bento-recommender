@@ -5,16 +5,20 @@ import com.leopaul29.bento.dtos.BentoFilterDto;
 import com.leopaul29.bento.services.BentoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/bentos")
@@ -26,10 +30,54 @@ public class BentoController {
         this.bentoService = bentoService;
     }
 
+    /*
+        # Tous les bentos:         GET /api/bento
+        # Avec filtres:            GET /api/bento?ingredientIds=1,2&tagIds=3,4
+        # Avec pagination:         GET /api/bento?ingredientIds=1,2&page=0&size=10&sort=name,asc
+        # Filtres d'exclusion:     GET /api/bento?excludeIngredientIds=5&excludeTagIds=6,7
+     */
+    //https://spec.openapis.org/oas/v3.1.0#example-object
+//    @ApiResponse(value = {
+//            @ApiResponse(responseCode = "200", description = "Ok", content = @Content(
+//                    mediaType = "application/json",
+//                    examples = {
+//                            @ExampleObject(name = "getBentoWithFilter", externalValue = "res")
+//                    }))
+//    })
+
+    /*
+    {
+  "content": [
+    {
+      "id": 1,
+      "name": "Bento Saumon",
+      "ingredients": [...],
+      "tags": [...]
+    }
+  ],
+  "pageable": {
+    "pageNumber": 0,
+    "pageSize": 20,
+    "sort": {
+      "sorted": true,
+      "unsorted": false
+    }
+  },
+  "totalElements": 150,
+  "totalPages": 8,
+  "last": false,
+  "first": true,
+  "numberOfElements": 20
+}
+     */
     // GET ?ingredientIds=1,..,10&?tagIds=1,..,10&?excludeIngredientIds=1,..,10&?excludeTagIds=1,..,10
     @GetMapping
-    public ResponseEntity<List<BentoDto>> getBentoWithFilter(BentoFilterDto filterDto) {
-        return ResponseEntity.ok(bentoService.getBentoWithFilter(filterDto));
+    public ResponseEntity<Page<BentoDto>> getBentoWithFilter(@Valid BentoFilterDto filterDto,
+                                                             @PageableDefault(
+                                                                     size = 20, sort = "id", direction = Sort.Direction.ASC)
+                                                             Pageable pageable) {
+        Page<BentoDto> bentos = bentoService.getBentoWithFilter(filterDto, pageable);
+        return ResponseEntity.ok(bentos);
     }
 
     // GET /{id}

@@ -2,19 +2,15 @@ package com.leopaul29.bento.services;
 
 import com.leopaul29.bento.dtos.BentoDto;
 import com.leopaul29.bento.dtos.BentoFilterDto;
-import com.leopaul29.bento.entities.Bento;
-import com.leopaul29.bento.entities.Ingredient;
-import com.leopaul29.bento.entities.Tag;
 import jakarta.persistence.EntityNotFoundException;
-
-import java.util.List;
-import java.util.Set;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface BentoService {
     // Search
     BentoDto getBentoById(Long id) throws EntityNotFoundException;
     BentoDto getRandomBento();
-    List<BentoDto> getBentoWithFilter(BentoFilterDto filterDto);
+    Page<BentoDto> getBentoWithFilter(BentoFilterDto filterDto, Pageable pageable);
 
     // CRUD
     BentoDto saveBento(BentoDto bentoDto);

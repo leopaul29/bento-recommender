@@ -7,19 +7,20 @@ import com.leopaul29.bento.entities.Ingredient;
 import com.leopaul29.bento.entities.Tag;
 import com.leopaul29.bento.mappers.BentoMapper;
 import com.leopaul29.bento.repositories.BentoRepository;
-import com.leopaul29.bento.repositories.BentoSpecification;
+import com.leopaul29.bento.repositories.specification.BentoSpecification;
 import com.leopaul29.bento.services.BentoService;
 import com.leopaul29.bento.services.IngredientService;
 import com.leopaul29.bento.services.TagService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class BentoServiceImpl implements BentoService {
@@ -47,7 +48,7 @@ public class BentoServiceImpl implements BentoService {
 
     @Override
     public BentoDto updateBento(Long id, BentoDto bentoDto) {
-        Bento bentoToUpdate = this.bentoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Invalid Bento id: "+id));
+        Bento bentoToUpdate = this.bentoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Invalid Bento id: " + id));
 
         Set<Ingredient> allIngredients = ingredientService.saveAndGetIngredientSet(bentoDto.getIngredients());
         Set<Tag> allTags = tagService.saveAndGetTagSet(bentoDto.getTags());
@@ -61,20 +62,20 @@ public class BentoServiceImpl implements BentoService {
 
     @Override
     public void deleteBento(Long id) {
-        Bento bento = this.bentoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Invalid Bento id: "+id));
+        Bento bento = this.bentoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Invalid Bento id: " + id));
         bentoRepository.delete(bento);
     }
 
     @Override
     public BentoDto getBentoById(Long id) throws EntityNotFoundException {
-        Bento bento = this.bentoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Invalid Bento id: "+id));
+        Bento bento = this.bentoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Invalid Bento id: " + id));
         return bentoMapper.toDto(bento);
     }
 
     @Override
     public BentoDto getRandomBento() {
         List<Bento> bentoList = bentoRepository.findAll();
-        if(bentoList.isEmpty()) return null;
+        if (bentoList.isEmpty()) return null;
 
         Random rand = new Random();
         int randomIndex = rand.nextInt(bentoList.size());
@@ -82,16 +83,33 @@ public class BentoServiceImpl implements BentoService {
     }
 
     @Override
-    public List<BentoDto> getBentoWithFilter(BentoFilterDto filterDto) {
+    public Page<BentoDto> getBentoWithFilter(BentoFilterDto filterDto, Pageable pageable) {
+        Specification<Bento> spec = buildSpecification(filterDto);
+        Page<Bento> bentoPage = bentoRepository.findAll(spec, pageable);
+
+        return bentoPage.map(bentoMapper::toDto);
+    }
+
+    private Specification<Bento> buildSpecification(BentoFilterDto filter) {
         Specification<Bento> spec = Specification.unrestricted();
+        if (filter.hasAnyFilter()) {
 
-        if(filterDto.getIngredientIds() != null && !filterDto.getIngredientIds().isEmpty()) {
-            spec = spec.and(BentoSpecification.hasIngredients(filterDto.getIngredientIds()));
+            if (filter.hasIngredientFilter()) {
+                spec = spec.and(BentoSpecification.hasIngredients(filter.getIngredientIds()));
+            }
+
+            if (filter.hasTagFilter()) {
+                spec = spec.and(BentoSpecification.hasTags(filter.getTagIds()));
+            }
+
+            if (filter.hasExcludeIngredientFilter()) {
+                spec = spec.and(BentoSpecification.excludeIngredients(filter.getExcludeIngredientIds()));
+            }
+
+            if (filter.hasExcludeTagFilter()) {
+                spec = spec.and(BentoSpecification.excludeTags(filter.getExcludeTagIds()));
+            }
         }
-
-        return bentoRepository.findAll(spec)
-                .stream()
-                .map(bentoMapper::toDto)
-                .collect(Collectors.toList());
+        return spec;
     }
 }
