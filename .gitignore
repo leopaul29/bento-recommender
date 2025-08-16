@@ -43,6 +43,7 @@ build/
 .env
 *.env
 docker-data/
+docker-compose.override.yml
 
 # Spring local config
 /src/main/resources/application-local.properties
