@@ -222,5 +222,13 @@ mockMvc.perform(get("/api/bentos/1"))
 
 ---
 
+## Documentation
+
+[Documentation](https://github.com/leopaul29/bento-recommender/wiki)
+
+
+
+---
+
 ## 📄 License
 MIT – free to use and modify for learning or production.
