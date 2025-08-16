@@ -26,14 +26,14 @@ public class Bento {
 
     @ManyToMany
     @JoinTable(
-            name = "bento_ingredient",
+            name = "bento_ingredients",
             joinColumns = @JoinColumn(name = "bento_id"),
             inverseJoinColumns = @JoinColumn(name = "ingredient_id")
     )
     private Set<Ingredient> ingredients;
     @ManyToMany
     @JoinTable(
-            name = "bento_tag",
+            name = "bento_tags",
             joinColumns = @JoinColumn(name = "bento_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
