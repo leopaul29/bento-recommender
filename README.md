@@ -46,6 +46,81 @@ Bento Recommender API は、弁当データ・ユーザー嗜好情報を管理�
 
 ---
 
+## 📚 Learning Outcomes
+
+By working on this project, you will:
+
+1. Understand **Spring Boot project structure** and dependency injection
+2. Learn **CRUD implementation** with Spring Data JPA
+3. Use **DTOs and mappers** (MapStruct) to separate persistence and presentation layers
+4. Integrate **PostgreSQL** with Docker
+5. Implement **recommendation logic** using filtering and predicates
+6. Write **API tests** with MockMvc and SpringBootTest
+7. Manage **database initialization** with SQL scripts and dummy data
+8. Use **Postman** or similar tools for API testing and debugging
+9. Handle **environment variables** with ```.env``` and properties
+
+---
+
+## ✅ Good Practices in This Project
+
+- **Entity vs DTO separation** → Prevents overexposing internal models
+- **Service layer encapsulation** → All business logic isolated from controllers
+- **Mapper layer** → Clean transformation between entities and DTOs
+- **Validation annotations** (`@NotNull`, `@Size`, `@Min`) → Ensure API contract consistency
+- **ControllerAdvice for global error handling** → Centralized exception management
+- **Environment variables** for DB credentials → Security & flexibility
+- **Idempotent SQL initialization scripts** → Reusable and safe test datasets
+- **Japanese & English specs** → Supports bilingual development and documentation
+- **RESTful API design** → Predictable, clean, and standard endpoint naming
+- ```.env``` is used to store secrets **(never commit it)**
+- ```application.properties``` uses **variable substitution** for flexibility
+- **Docker** ensures consistent DB state across environments
+
+---
+
+## 📌 Next Steps
+
+* **Enhance Recommendation Algorithm**
+  * Add scoring system for tags and ingredients
+  * Implement ranking and result limits
+* **Security**
+  * Add Spring Security with JWT authentication
+* **Frontend**
+  * Create a simple UI to visualize recommendations
+
+---
+
+
+## 📡 API Endpoints
+
+### **Bento API**
+
+| Method | Endpoint           | Description           |
+|--------|--------------------|-----------------------|
+| GET    | `/api/bentos`      | Get all bentos        |
+| GET    | `/api/bentos/{id}` | Get bento by ID       |
+| POST   | `/api/bentos`      | Create a new bento    |
+| PUT    | `/api/bentos/{id}` | Update existing bento |
+| DELETE | `/api/bentos/{id}` | Delete a bento        |
+
+### **User Preferences API**
+
+| Method | Endpoint                      | Description          |
+|--------|-------------------------------|----------------------|
+| POST   | `/api/users/{id}/preferences` | Set user preferences |
+
+### **Recommendation API**
+
+| Method | Endpoint                        | Description                    |
+|--------|---------------------------------|--------------------------------|
+| GET    | `/api/recommendations?userId=1` | Get recommendations for a user |
+
+* **More details with the page [API Documentation](https://github.com/leopaul29/bento-recommender/wiki/4-%E2%80%90-Endpoints-(jp))**
+* **See also with OpenAPI swagger at the following url http://localhost:8080/v3/api-docs**
+
+---
+
 ## 📂 Project Structure
 
 ```
@@ -78,7 +153,7 @@ src/
 ---
 
 ## 📦 Installation & Setup
-### 0. Prerequisites
+### Prerequisites
 
 * Java 17+
 * Maven 3.8+
@@ -126,36 +201,6 @@ mvn spring-boot:run
 
 ---
 
-## 📡 API Endpoints
-
-### **Bento API**
-
-| Method | Endpoint           | Description           |
-|--------|--------------------|-----------------------|
-| GET    | `/api/bentos`      | Get all bentos        |
-| GET    | `/api/bentos/{id}` | Get bento by ID       |
-| POST   | `/api/bentos`      | Create a new bento    |
-| PUT    | `/api/bentos/{id}` | Update existing bento |
-| DELETE | `/api/bentos/{id}` | Delete a bento        |
-
-### **User Preferences API**
-
-| Method | Endpoint                      | Description          |
-|--------|-------------------------------|----------------------|
-| POST   | `/api/users/{id}/preferences` | Set user preferences |
-
-### **Recommendation API**
-
-| Method | Endpoint                        | Description                    |
-|--------|---------------------------------|--------------------------------|
-| GET    | `/api/recommendations?userId=1` | Get recommendations for a user |
-
-* **More details with the page [API Documentation](./docs-jp/endpoints.md)**
-* **See also with OpenAPI swagger at the following url http://localhost:8080/v3/api-docs**
-
-
----
-
 ## 🧪 Running Tests
 
 ### With Maven
@@ -172,84 +217,10 @@ mockMvc.perform(get("/api/bentos/1"))
        .andExpect(jsonPath("$.name").value("Test Bento"));
 ```
 
-* **More details with the page [Bento test](./docs-jp/bento-test.md)
+* **More details with the page [Bento test](docs/bento-test.md)
 * **With postman: check the collection test results with the page [postman tests](./postman-tests/Bento-recommender.postman_test_run.json)**
 
 ---
-
-## 📌 Next Steps
-
-* **Enhance Recommendation Algorithm**
-    * Add scoring system for tags and ingredients
-    * Implement ranking and result limits
-* **Security**
-    * Add Spring Security with JWT authentication
-* **Frontend**
-    * Create a simple UI to visualize recommendations
-
-
----
-
-## ⚙️ How to Run (Local + Docker)
-
-### 1. Clone the repo
-```bash
-git clone https://github.com/yourusername/bento-recommender.git
-cd bento-recommender
-```
-### 2. Create .env file at the root
-```
-POSTGRES_USER=root
-POSTGRES_PASSWORD=secret
-POSTGRES_DB=bento_db
-```
-### 3. Start PostgreSQL with Docker Compose
-```
-docker compose --env-file .env up -d
-```
-### 4. Configure Spring Boot
-Create ```src/main/resources/application.properties:```
-```
-spring.datasource.url=jdbc:postgresql://localhost:5432/bento_db
-spring.datasource.username=${POSTGRES_USER}
-spring.datasource.password=${POSTGRES_PASSWORD}
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-```
-### 5. Run the app
-```
-./mvnw spring-boot:run
-```
-## 📚 Learning Outcomes
-
-By working on this project, you will:
-
-1. Understand **Spring Boot project structure** and dependency injection
-2. Learn **CRUD implementation** with Spring Data JPA
-3. Use **DTOs and mappers** (MapStruct) to separate persistence and presentation layers
-4. Integrate **PostgreSQL** with Docker
-5. Implement **recommendation logic** using filtering and predicates
-6. Write **API tests** with MockMvc and SpringBootTest
-7. Manage **database initialization** with SQL scripts and dummy data
-8. Use **Postman** or similar tools for API testing and debugging
-9. Handle **environment variables** with ```.env``` and properties
-
----
-
-## ✅ Good Practices in This Project
-
-- **Entity vs DTO separation** → Prevents overexposing internal models
-- **Service layer encapsulation** → All business logic isolated from controllers
-- **Mapper layer** → Clean transformation between entities and DTOs
-- **Validation annotations** (`@NotNull`, `@Size`, `@Min`) → Ensure API contract consistency
-- **ControllerAdvice for global error handling** → Centralized exception management
-- **Environment variables** for DB credentials → Security & flexibility
-- **Idempotent SQL initialization scripts** → Reusable and safe test datasets
-- **Japanese & English specs** → Supports bilingual development and documentation
-- **RESTful API design** → Predictable, clean, and standard endpoint naming
-- ```.env``` is used to store secrets **(never commit it)**
-- ```application.properties``` uses **variable substitution** for flexibility
-- **Docker** ensures consistent DB state across environments
 
 ## 📄 License
 MIT – free to use and modify for learning or production.
