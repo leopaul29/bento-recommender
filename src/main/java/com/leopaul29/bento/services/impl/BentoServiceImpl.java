@@ -92,8 +92,7 @@ public class BentoServiceImpl implements BentoService {
 
     private Specification<Bento> buildSpecification(BentoFilterDto filter) {
         Specification<Bento> spec = Specification.unrestricted();
-        if (filter.hasAnyFilter()) {
-
+        if (filter != null && filter.hasAnyFilter()) {
             if (filter.hasIngredientFilter()) {
                 spec = spec.and(BentoSpecification.hasIngredients(filter.getIngredientIds()));
             }
