@@ -217,16 +217,20 @@ mockMvc.perform(get("/api/bentos/1"))
        .andExpect(jsonPath("$.name").value("Test Bento"));
 ```
 
-* **More details with the page [Bento test](docs/bento-test.md)
-* **With postman: check the collection test results with the page [postman tests](./postman-tests/Bento-recommender.postman_test_run.json)**
+* **More details with the page [Bento test](docs-test/bento-test.md)
+* **With postman: check the collection test results with the page [postman tests](docs-test/Bento-recommender.postman_test_run.json)**
 
+---
+
+## Frontend screenshot
+
+Small frontend with thymeleaf and tailwindcss cdn
+![bento-list-screenshot.jpg](docs/bento-list-screenshot.jpg)
 ---
 
 ## Documentation
 
 [Documentation](https://github.com/leopaul29/bento-recommender/wiki)
-
-
 
 ---
 
