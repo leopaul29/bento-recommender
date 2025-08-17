@@ -225,6 +225,7 @@ mockMvc.perform(get("/api/bentos/1"))
 ## Frontend screenshot
 
 Small frontend with thymeleaf and tailwindcss cdn
+
 ![bento-list-screenshot.jpg](docs/bento-list-screenshot.jpg)
 ---
 
