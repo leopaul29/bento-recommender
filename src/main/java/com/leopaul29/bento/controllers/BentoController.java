@@ -5,30 +5,27 @@ import com.leopaul29.bento.dtos.BentoFilterDto;
 import com.leopaul29.bento.services.BentoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/bentos")
+@RequiredArgsConstructor
 public class BentoController {
 
     private final BentoService bentoService;
-
-    public BentoController(BentoService bentoService) {
-        this.bentoService = bentoService;
-    }
 
     /*
         # Tous les bentos:         GET /api/bento
@@ -72,6 +69,7 @@ public class BentoController {
      */
     // GET ?ingredientIds=1,..,10&?tagIds=1,..,10&?excludeIngredientIds=1,..,10&?excludeTagIds=1,..,10
     @GetMapping
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<Page<BentoDto>> getBentoWithFilter(@Valid BentoFilterDto filterDto,
                                                              @PageableDefault(
                                                                      size = 20, sort = "id", direction = Sort.Direction.ASC)
@@ -106,6 +104,7 @@ public class BentoController {
 
     // POST
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BentoDto> createBento(@Valid @RequestBody BentoDto bentoDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.bentoService.saveBento(bentoDto));
     }
