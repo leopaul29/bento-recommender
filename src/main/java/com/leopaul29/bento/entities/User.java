@@ -1,10 +1,7 @@
 package com.leopaul29.bento.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -17,6 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString(exclude = {"dislikedIngredients", "likedTags", "password"})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
