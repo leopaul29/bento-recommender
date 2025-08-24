@@ -36,7 +36,7 @@ public class AuthController {
     private final JwtService jwtService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDto loginRequest) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -52,7 +52,7 @@ public class AuthController {
             UserPrincipal userPrincipal = (UserPrincipal) userDetails;
             User user = userPrincipal.getUser();
 
-            JwtResponseDto response = JwtResponseDto.builder()
+            JwtResponse response = JwtResponse.builder()
                     .token(jwt)
                     .username(user.getUsername())
 //                    .email(user.getEmail())
@@ -64,21 +64,21 @@ public class AuthController {
 
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ApiResponseDto(false, "Invalid username or password"));
+                    .body(new ApiResponse(false, "Invalid username or password"));
         } catch (Exception e) {
             log.error("Login error: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ApiResponseDto(false, "An error occurred during login"));
+                    .body(new ApiResponse(false, "An error occurred during login"));
         }
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequestDto registerRequest) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest) {
         try {
             // Vérifier si l'utilisateur existe déjà
             if (userRepository.existsByUsername(registerRequest.getUsername())) {
                 return ResponseEntity.badRequest()
-                        .body(new ApiResponseDto(false, "Username is already taken"));
+                        .body(new ApiResponse(false, "Username is already taken"));
             }
 
 //            if (userRepository.existsByEmail(registerRequest.getEmail())) {
@@ -97,12 +97,12 @@ public class AuthController {
 
             userRepository.save(user);
 
-            return ResponseEntity.ok(new ApiResponseDto(true, "User registered successfully"));
+            return ResponseEntity.ok(new ApiResponse(true, "User registered successfully"));
 
         } catch (Exception e) {
             log.error("Registration error: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ApiResponseDto(false, "An error occurred during registration"));
+                    .body(new ApiResponse(false, "An error occurred during registration"));
         }
     }
 
@@ -112,7 +112,7 @@ public class AuthController {
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ApiResponseDto(false, "No token provided"));
+                    .body(new ApiResponse(false, "No token provided"));
         }
 
         try {
@@ -126,7 +126,7 @@ public class AuthController {
                 UserPrincipal userPrincipal = (UserPrincipal) userDetails;
                 User user = userPrincipal.getUser();
 
-                JwtResponseDto response = JwtResponseDto.builder()
+                JwtResponse response = JwtResponse.builder()
                         .token(newToken)
                         .username(user.getUsername())
 //                        .email(user.getEmail())
@@ -141,7 +141,7 @@ public class AuthController {
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new ApiResponseDto(false, "Invalid token"));
+                .body(new ApiResponse(false, "Invalid token"));
     }
 
     @GetMapping("/me")
