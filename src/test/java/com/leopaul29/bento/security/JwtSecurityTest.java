@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.ActiveProfiles;
@@ -172,10 +173,11 @@ class JwtSecurityTest {
         // Allow 1-second tolerance for test execution time
         assertThat(actualDuration).isBetween(expectedDuration - 1000, expectedDuration + 1000);
     }
+    @Value("${jwt.secret}")
+    String secretKey;
 
     // Helper method pour obtenir la clé de signature (pour les tests seulement)
     private Key getSigningKeyForTest() {
-        String secretKey = "testSecretKeyForTestingPurpose123456789012345678901234567890";
         byte[] keyBytes = Decoders.BASE64.decode(Base64.getEncoder().encodeToString(secretKey.getBytes()));
         return Keys.hmacShaKeyFor(keyBytes);
     }
