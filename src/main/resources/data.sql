@@ -108,7 +108,8 @@ INSERT INTO bento_tags (bento_id, tag_id) VALUES
 (20, 4), (20, 7);
 
 -- Users
-INSERT INTO users (id, name) VALUES
-(1, 'Alice'),
-(2, 'Bob'),
-(3, 'Charlie');
+-- password = $2a$10$Nzp1frdznyjxCKL0.s6UJe1YmL860jRWhrmSXrvb4.gkmWJZOSSUe
+INSERT INTO users (id, username, password, enabled, user_role) VALUES
+(1, 'Alice', '$2a$10$Nzp1frdznyjxCKL0.s6UJe1YmL860jRWhrmSXrvb4.gkmWJZOSSUe', true, 'USER'),
+(2, 'Bob', '$2a$10$Nzp1frdznyjxCKL0.s6UJe1YmL860jRWhrmSXrvb4.gkmWJZOSSUe', true, 'USER'),
+(3, 'Charlie', '$2a$10$Nzp1frdznyjxCKL0.s6UJe1YmL860jRWhrmSXrvb4.gkmWJZOSSUe', true, 'USER');

@@ -83,7 +83,8 @@ public class DataInitializer {
         System.out.println("✅ Bento data inserted");
 
         User user = new User();
-        user.setName("Tom");
+        user.setUsername("Tom");
+        user.setPassword("password");
         user.setLikedTags(Set.of(vegan, japanese));
         user.setDislikedIngredients(Set.of(beef));
         userRepository.save(user);
