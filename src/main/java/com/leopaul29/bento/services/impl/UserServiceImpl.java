@@ -44,8 +44,8 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserPreferenceDto(saved);
     }
 
-//    @Override
-//    public User getUserById(Long userId) {
-//        return userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Invalid User id: " + id));
-//    }
+    @Override
+    public User getById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Invalid User id: " + userId));
+    }
 }

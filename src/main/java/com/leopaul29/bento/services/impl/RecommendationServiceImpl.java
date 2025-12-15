@@ -1,49 +1,38 @@
 package com.leopaul29.bento.services.impl;
 
-import com.leopaul29.bento.dtos.BentoDto;
 import com.leopaul29.bento.entities.Bento;
 import com.leopaul29.bento.entities.User;
-import com.leopaul29.bento.mappers.BentoMapper;
-import com.leopaul29.bento.repositories.BentoRepository;
-import com.leopaul29.bento.repositories.UserRepository;
 import com.leopaul29.bento.services.RecommendationService;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.leopaul29.bento.services.recommendation.RecommendationStrategy;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.function.Predicate;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class RecommendationServiceImpl implements RecommendationService {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private BentoRepository bentoRepository;
-    @Autowired
-    private BentoMapper bentoMapper;
+    private final Map<String, RecommendationStrategy> strategies;
 
-    @Override
-    public List<BentoDto> getRecommendedByUserId(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Invalid User id: " + userId));
+    public RecommendationServiceImpl(List<RecommendationStrategy> strategyList) {
+        this.strategies = strategyList.stream()
+                .collect(Collectors.toMap(
+                        s -> s.getClass().getSimpleName(),
+                        s -> s
+                ));
+    }
 
-        Predicate<Bento> excludeDisliked = bento ->
-                Collections.disjoint(
-                        bento.getIngredients(),
-                        user.getDislikedIngredients()
+    public List<Bento> recommend(
+            String strategyName,
+            User user,
+            List<Bento> bentos
+    ) {
+        RecommendationStrategy strategy =
+                strategies.getOrDefault(
+                        strategyName,
+                        strategies.get("PreferenceBasedRecommendationStrategy")
                 );
 
-        Predicate<Bento> matchLikedTags = bento ->
-                !Collections.disjoint(
-                        bento.getTags(),
-                        user.getLikedTags()
-                );
-
-        return bentoRepository.findAll().stream()
-                .filter(excludeDisliked)
-                .filter(matchLikedTags)
-                .map(bentoMapper::toDto)
-                .toList();
+        return strategy.recommend(user, bentos);
     }
 }

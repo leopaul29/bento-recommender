@@ -1,9 +1,14 @@
 package com.leopaul29.bento.services;
 
-import com.leopaul29.bento.dtos.BentoDto;
+import com.leopaul29.bento.entities.Bento;
+import com.leopaul29.bento.entities.User;
 
 import java.util.List;
 
 public interface RecommendationService {
-    List<BentoDto> getRecommendedByUserId(Long userId);
+    List<Bento> recommend(
+            String strategyName,
+            User user,
+            List<Bento> bentos
+    );
 }
