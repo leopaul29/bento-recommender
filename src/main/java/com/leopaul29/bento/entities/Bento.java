@@ -1,10 +1,7 @@
 package com.leopaul29.bento.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Objects;
 import java.util.Set;
@@ -13,6 +10,7 @@ import java.util.Set;
 @Entity
 @Table(name = "bentos")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@Builder
 public class Bento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
