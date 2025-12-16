@@ -31,7 +31,7 @@ class RecommendationServiceIT {
 
     @Test
     void shouldReturnRecommendationsUsingDefaultStrategy() {
-        Tag vegan = Tag.of("vegan");
+        Tag vegan = Tag.builder().name("vegan").build();
         User user = userRepository.save(
                 User.builder().likedTags(Set.of(vegan)).build()
         );

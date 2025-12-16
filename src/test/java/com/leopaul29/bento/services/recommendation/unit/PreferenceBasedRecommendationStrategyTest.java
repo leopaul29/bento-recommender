@@ -27,9 +27,9 @@ class PreferenceBasedRecommendationStrategyTest {
     @Test
     void shouldRecommendBentoWhenUserLikesTagAndNoDislikedIngredient() {
         // given
-        Tag vegan = Tag.of("vegan");
-        Ingredient rice = Ingredient.of("rice");
-        Ingredient beef = Ingredient.of("beef");
+        Tag vegan = Tag.builder().name("vegan").build();
+        Ingredient rice = Ingredient.builder().name("rice").build();
+        Ingredient beef = Ingredient.builder().name("beef").build();
 
         Bento bento = Bento.builder().name("Vegan Bento").tags(Set.of(vegan)).ingredients(Set.of(rice)).build();
 
@@ -45,7 +45,7 @@ class PreferenceBasedRecommendationStrategyTest {
 
     @Test
     void shouldExcludeBentoContainingDislikedIngredient() {
-        Ingredient beef = Ingredient.of("beef");
+        Ingredient beef = Ingredient.builder().name("beef").build();
 
         Bento bento = Bento.builder().name("Beef Bento").tags(Set.of()).ingredients(Set.of(beef)).build();
 
