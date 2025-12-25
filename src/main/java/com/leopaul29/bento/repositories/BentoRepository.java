@@ -7,5 +7,8 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BentoRepository extends JpaRepository<Bento, Long>, JpaSpecificationExecutor<Bento>, PagingAndSortingRepository<Bento, Long> {
+public interface BentoRepository extends
+        JpaRepository<Bento, Long>,
+        JpaSpecificationExecutor<Bento>,
+        PagingAndSortingRepository<Bento, Long> {
 }

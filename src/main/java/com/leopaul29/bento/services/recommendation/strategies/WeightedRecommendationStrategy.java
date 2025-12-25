@@ -1,9 +1,10 @@
-package com.leopaul29.bento.services.recommendation;
+package com.leopaul29.bento.services.recommendation.strategies;
 
 import com.leopaul29.bento.entities.Bento;
 import com.leopaul29.bento.entities.Ingredient;
 import com.leopaul29.bento.entities.Tag;
 import com.leopaul29.bento.entities.User;
+import com.leopaul29.bento.services.recommendation.RecommendationContext;
 import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
@@ -13,7 +14,7 @@ import java.util.List;
 public class WeightedRecommendationStrategy implements RecommendationStrategy {
 
     @Override
-    public List<Bento> recommend(User user, List<Bento> allBentos) {
+    public List<Bento> recommend(User user, List<Bento> allBentos, RecommendationContext context) {
         return allBentos.stream()
                 .map(bento -> new ScoredBento(bento, score(bento, user)))
                 .filter(scored -> scored.score() > 0)

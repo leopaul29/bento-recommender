@@ -4,8 +4,8 @@ import com.leopaul29.bento.entities.Bento;
 import com.leopaul29.bento.entities.Ingredient;
 import com.leopaul29.bento.entities.Tag;
 import com.leopaul29.bento.entities.User;
-import com.leopaul29.bento.services.recommendation.PreferenceBasedRecommendationStrategy;
-import com.leopaul29.bento.services.recommendation.RecommendationStrategy;
+import com.leopaul29.bento.services.recommendation.strategies.PreferenceBasedRecommendationStrategy;
+import com.leopaul29.bento.services.recommendation.strategies.RecommendationStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -36,7 +36,7 @@ class PreferenceBasedRecommendationStrategyTest {
         User user = User.builder().likedTags(Set.of(vegan)).dislikedIngredients(Set.of(beef)).build();
 
         // when
-        List<Bento> result = strategy.recommend(user, List.of(bento));
+        List<Bento> result = strategy.recommend(user, List.of(bento), null);
 
         // then
         assertEquals(1, result.size());
@@ -51,7 +51,7 @@ class PreferenceBasedRecommendationStrategyTest {
 
         User user = User.builder().likedTags(Set.of()).dislikedIngredients(Set.of(beef)).build();
 
-        List<Bento> result = strategy.recommend(user, List.of(bento));
+        List<Bento> result = strategy.recommend(user, List.of(bento), null);
 
         assertTrue(result.isEmpty());
     }

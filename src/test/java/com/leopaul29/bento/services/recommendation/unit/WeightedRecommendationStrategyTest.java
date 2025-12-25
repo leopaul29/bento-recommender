@@ -3,7 +3,7 @@ package com.leopaul29.bento.services.recommendation.unit;
 import com.leopaul29.bento.entities.Bento;
 import com.leopaul29.bento.entities.Tag;
 import com.leopaul29.bento.entities.User;
-import com.leopaul29.bento.services.recommendation.WeightedRecommendationStrategy;
+import com.leopaul29.bento.services.recommendation.strategies.WeightedRecommendationStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +34,8 @@ class WeightedRecommendationStrategyTest {
 
         List<Bento> result = strategy.recommend(
                 user,
-                List.of(lowScore, highScore)
+                List.of(lowScore, highScore),
+                null
         );
 
         assertEquals("Spicy Vegan Bento", result.get(0).getName());

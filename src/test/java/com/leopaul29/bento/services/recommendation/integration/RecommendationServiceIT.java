@@ -5,7 +5,7 @@ import com.leopaul29.bento.entities.Tag;
 import com.leopaul29.bento.entities.User;
 import com.leopaul29.bento.repositories.BentoRepository;
 import com.leopaul29.bento.repositories.UserRepository;
-import com.leopaul29.bento.services.RecommendationService;
+import com.leopaul29.bento.services.recommendation.RecommendationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
