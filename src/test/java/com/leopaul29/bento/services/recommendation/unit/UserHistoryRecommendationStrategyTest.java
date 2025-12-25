@@ -3,12 +3,10 @@ package com.leopaul29.bento.services.recommendation.unit;
 import com.leopaul29.bento.entities.Bento;
 import com.leopaul29.bento.entities.Tag;
 import com.leopaul29.bento.entities.User;
-import com.leopaul29.bento.repositories.UserBentoHistoryRepository;
 import com.leopaul29.bento.services.recommendation.RecommendationContext;
 import com.leopaul29.bento.services.recommendation.strategies.UserHistoryRecommendationStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
@@ -21,8 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class UserHistoryRecommendationStrategyTest {
 
     private UserHistoryRecommendationStrategy strategy;
-    @Autowired
-    private UserBentoHistoryRepository userBentoHistoryRepository;
 
     @BeforeEach
     void setup() {

@@ -1,11 +1,13 @@
 package com.leopaul29.bento.services.recommendation;
 
 import lombok.Builder;
+import lombok.Getter;
 
 import java.util.Date;
 import java.util.Map;
 
 @Builder
+@Getter
 public class RecommendationContext {
 
     private final Map<Long, Long> orderCountByBento;
@@ -17,14 +19,6 @@ public class RecommendationContext {
     ) {
         this.orderCountByBento = orderCountByBento;
         this.lastOrderByBento = lastOrderByBento;
-    }
-
-    public Map<Long, Long> getOrderCountByBento() {
-        return orderCountByBento;
-    }
-
-    public Map<Long, Date> getLastOrderByBento() {
-        return lastOrderByBento;
     }
 }
 

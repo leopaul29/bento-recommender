@@ -5,9 +5,8 @@ import com.leopaul29.bento.entities.Bento;
 import com.leopaul29.bento.entities.User;
 import com.leopaul29.bento.mappers.BentoMapper;
 import com.leopaul29.bento.repositories.BentoRepository;
-import com.leopaul29.bento.services.recommendation.RecommendationContext;
-import com.leopaul29.bento.services.recommendation.RecommendationService;
 import com.leopaul29.bento.services.UserService;
+import com.leopaul29.bento.services.recommendation.RecommendationService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,13 +39,12 @@ public class RecommendationController {
 
     /**
      * recommend bento for user
-     *
      * API URL samples:
      * GET /api/recommendations?userId=1
      * GET /api/recommendations?userId=1&strategy=WeightedRecommendationStrategy
-     * @param userId
-     * @param strategy
-     * @return
+     * @param userId userId
+     * @param strategy strategy name
+     * @return List<Bento> bentoList
      */
     @RequestMapping("/")
     public List<BentoDto> recommend(
@@ -55,8 +53,6 @@ public class RecommendationController {
     ) {
         User user = userService.getById(userId);
         List<Bento> all = bentoRepository.findAll();
-
-        RecommendationContext context = RecommendationContext.builder().build();
 
         List<Bento> result = recommendationService
                 .recommend(strategy, user, all);

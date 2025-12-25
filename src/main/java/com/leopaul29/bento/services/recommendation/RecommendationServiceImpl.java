@@ -6,7 +6,6 @@ import com.leopaul29.bento.repositories.UserBentoHistoryRepository;
 import com.leopaul29.bento.services.recommendation.strategies.RecommendationStrategy;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
