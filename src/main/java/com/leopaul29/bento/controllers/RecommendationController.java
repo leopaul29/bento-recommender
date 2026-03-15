@@ -52,10 +52,9 @@ public class RecommendationController {
             @RequestParam(required = false) String strategy
     ) {
         User user = userService.getById(userId);
-        List<Bento> all = bentoRepository.findAll();
 
         List<Bento> result = recommendationService
-                .recommend(strategy, user, all);
+                .recommend(strategy, user, bentoRepository::findAll);
 
         return result.stream()
                 .map(bentoMapper::toDto)

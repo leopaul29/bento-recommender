@@ -41,7 +41,7 @@ class RecommendationServiceIT {
         );
 
         List<Bento> result = recommendationService
-                .recommend(null, user, bentoRepository.findAll());
+                .recommend(null, user, bentoRepository::findAll);
 
         assertFalse(result.isEmpty());
     }

@@ -13,12 +13,19 @@ public class PreferenceBasedRecommendationStrategy implements RecommendationStra
 
     @Override
     public List<Bento> recommend(User user, List<Bento> allBentos, RecommendationContext context) {
+        if (allBentos.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        var likedTags = user.getLikedTags();
+        var dislikedIngredients = user.getDislikedIngredients();
+
         return allBentos.stream()
                 .filter(bento ->
-                        bento.getTags().containsAll(user.getLikedTags()) &&
+                        bento.getTags().containsAll(likedTags) &&
                                 Collections.disjoint(
                                         bento.getIngredients(),
-                                        user.getDislikedIngredients()
+                                        dislikedIngredients
                                 )
                 )
                 .toList();

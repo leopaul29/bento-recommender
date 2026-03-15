@@ -5,10 +5,12 @@ import com.leopaul29.bento.entities.User;
 
 import java.util.List;
 
+import java.util.function.Supplier;
+
 public interface RecommendationService {
     List<Bento> recommend(
             String strategyName,
             User user,
-            List<Bento> bentos
+            Supplier<List<Bento>> bentosSupplier
     );
 }

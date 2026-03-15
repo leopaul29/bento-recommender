@@ -7,6 +7,10 @@ import com.leopaul29.bento.services.recommendation.RecommendationContext;
 import java.util.List;
 
 public interface RecommendationStrategy {
+    default boolean requiresHistory() {
+        return false;
+    }
+
     List<Bento> recommend(User user,
                           List<Bento> allBentos,
                           RecommendationContext context);
