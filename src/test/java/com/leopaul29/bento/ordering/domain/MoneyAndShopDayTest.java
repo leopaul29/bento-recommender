@@ -60,6 +60,21 @@ class MoneyAndShopDayTest {
     }
 
     @Test
+    @DisplayName("the stock snapshot is a copy a caller cannot use to change the stock")
+    void theStockSnapshotIsACopyACallerCannotChange() {
+        ShopDay day = ShopDay.of(DATE, CUTOFF, Map.of(BentoId.of(1L), 5, BentoId.of(2L), 0));
+
+        assertThat(day.stockSnapshot())
+                .containsExactlyInAnyOrderEntriesOf(Map.of(BentoId.of(1L), 5, BentoId.of(2L), 0));
+
+        assertThatThrownBy(() -> day.stockSnapshot().put(BentoId.of(1L), 999))
+                .isInstanceOf(UnsupportedOperationException.class);
+
+        day.reserve(BentoId.of(1L), Quantity.of(2));
+        assertThat(day.stockSnapshot().get(BentoId.of(1L))).isEqualTo(3);
+    }
+
+    @Test
     @DisplayName("reserving takes stock down, and a reserve for an unknown bento is refused")
     void reservingTakesStockDown() {
         ShopDay day = ShopDay.of(DATE, CUTOFF, Map.of(BentoId.of(1L), 5));

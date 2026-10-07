@@ -43,6 +43,31 @@ public final class Order {
         return new Order(id, customerId, serviceDate);
     }
 
+    /** What a line looks like to a persistence adapter, which cannot build an {@link OrderLine}. */
+    public record LineSnapshot(BentoId bentoId, Quantity quantity, Money unitPrice) {}
+
+    /**
+     * Rebuilds a stored order. The single seam a persistence adapter is allowed through.
+     *
+     * <p>It does not replay the lifecycle: the stored state was validated by the rules on the way
+     * in, and re-running {@code place()} on load would need a clock and a cutoff that no longer
+     * exist. It raises no events either — those were published when the change happened, not when
+     * the row is read.
+     *
+     * <p>{@link OrderLine}'s constructor stays package-private: the adapter hands over
+     * {@link LineSnapshot}s and the aggregate builds its own lines, so the only way to own a line
+     * is still to be the order it belongs to.
+     */
+    public static Order rehydrate(OrderId id, CustomerId customerId, LocalDate serviceDate,
+                                  OrderStatus status, List<LineSnapshot> lines) {
+        Order order = new Order(id, customerId, serviceDate);
+        order.status = Objects.requireNonNull(status, "a stored order needs a status");
+        for (LineSnapshot line : lines) {
+            order.lines.add(new OrderLine(line.bentoId(), line.quantity(), line.unitPrice()));
+        }
+        return order;
+    }
+
     /**
      * Adds a line, capturing the unit price as it is now (I3).
      *
