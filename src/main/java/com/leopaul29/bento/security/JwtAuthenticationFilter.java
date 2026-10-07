@@ -31,12 +31,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        // Skip JWT validation for auth endpoints
-        if (request.getServletPath().contains("/api/auth")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
+        // No path-based skip: /api/auth/me and /api/auth/refresh carry a token and must be
+        // authenticated. Requests without a Bearer header fall through untouched below,
+        // which is all /login and /register ever needed.
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
 //        final String userEmail;

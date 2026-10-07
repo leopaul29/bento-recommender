@@ -64,7 +64,10 @@ public class SecurityConfig {
                 // Completely disables session management, so no more classic login form.
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Endpoint public's
+                        // Endpoint public's — /me reads the principal, so it cannot be anonymous:
+                        // under permitAll an unauthenticated call reached the controller and the
+                        // UserPrincipal cast produced a 500 instead of a 401.
+                        .requestMatchers("/api/auth/me").authenticated()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
 
