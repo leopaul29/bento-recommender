@@ -1,0 +1,44 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Pre-release checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: temurin
+          cache: maven
+
+      - name: Verify
+        run: ./mvnw -B verify
+
+      # The tag, the POM version, and the artifact must agree.
+      - name: Tag matches pom.xml
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          POM_VERSION="$(./mvnw -q -B -DforceStdout help:evaluate -Dexpression=project.version)"
+          echo "tag=$TAG  pom.xml=$POM_VERSION"
+          if [ "$TAG" != "$POM_VERSION" ]; then
+            echo "::error::Tag v$TAG does not match pom.xml version $POM_VERSION."
+            exit 1
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          name: bento-recommender ${{ github.ref_name }}

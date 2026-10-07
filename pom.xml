@@ -156,6 +156,21 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
+			<!-- Surefire's default includes are *Test / Test* / *Tests / *TestCase, so the
+			     *IT classes were compiled and never executed. Failsafe runs them at
+			     `mvn verify` and reports into target/failsafe-reports/. -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
