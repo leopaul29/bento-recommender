@@ -64,6 +64,17 @@ public final class ShopDay {
         remaining.put(bentoId, left - quantity.value());
     }
 
+    /**
+     * The remaining stock, as an unmodifiable copy, for a persistence adapter to write.
+     *
+     * <p>The same seam as {@code Order.LineSnapshot}: the aggregate describes its own state rather
+     * than letting storage reach into it. Returning the live map would hand any caller the ability
+     * to set stock to anything, which is the one thing {@link #reserve} exists to prevent.
+     */
+    public Map<BentoId, Integer> stockSnapshot() {
+        return Map.copyOf(remaining);
+    }
+
     public LocalDate date() {
         return date;
     }

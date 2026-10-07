@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -153,6 +154,49 @@ class OrderTest {
                 .hasMessageContaining("COLLECTED");
 
         assertThat(order.lines()).hasSize(1);
+    }
+
+    @Test
+    @DisplayName("a rehydrated order is the order that was stored")
+    void aRehydratedOrderIsTheOrderThatWasStored() {
+        Order original = placed();
+        original.accept(BEFORE_CUTOFF);
+        original.pullEvents();
+
+        // What a persistence adapter has to work with: no OrderLine constructor, only snapshots.
+        List<Order.LineSnapshot> snapshots = original.lines().stream()
+                .map(line -> new Order.LineSnapshot(
+                        line.bentoId(), line.quantity(), line.unitPrice()))
+                .toList();
+
+        Order rebuilt = Order.rehydrate(original.id(), original.customerId(),
+                original.serviceDate(), original.status(), snapshots);
+
+        assertThat(rebuilt.id()).isEqualTo(original.id());
+        assertThat(rebuilt.customerId()).isEqualTo(original.customerId());
+        assertThat(rebuilt.serviceDate()).isEqualTo(original.serviceDate());
+        assertThat(rebuilt.status()).isEqualTo(OrderStatus.ACCEPTED);
+        assertThat(rebuilt.lines()).isEqualTo(original.lines());
+        assertThat(rebuilt.total()).isEqualTo(original.total());
+
+        // Rehydration is not a change, so it raises nothing: those events were published when
+        // the order was actually placed and accepted, not when the row is read back.
+        assertThat(rebuilt.pullEvents()).isEmpty();
+
+        // And the rules still apply afterwards — a rehydrated ACCEPTED order can be cancelled,
+        // but cannot jump to COLLECTED.
+        assertThatThrownBy(rebuilt::collect).isInstanceOf(IllegalOrderTransition.class);
+        rebuilt.cancel(BEFORE_CUTOFF);
+        assertThat(rebuilt.status()).isEqualTo(OrderStatus.CANCELLED);
+    }
+
+    @Test
+    @DisplayName("rehydrating refuses a null status")
+    void rehydratingRefusesANullStatus() {
+        assertThatThrownBy(() -> Order.rehydrate(OrderId.newId(), CustomerId.of(1L),
+                SERVICE_DATE, null, List.of()))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessageContaining("status");
     }
 
     @Test
