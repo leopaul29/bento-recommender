@@ -61,7 +61,19 @@ class ArchitectureTest {
                         "jakarta..",
                         "lombok..",
                         "org.hibernate..")
-                .because("wiring belongs in infrastructure (Phase 2), not in the use cases")
+                .because("wiring belongs in infrastructure, not in the use cases")
+                .check(productionClasses);
+    }
+
+    @Test
+    @DisplayName("the ordering application layer does not depend on infrastructure either")
+    void theOrderingApplicationLayerDoesNotDependOnInfrastructureEither() {
+        noClasses()
+                .that().resideInAPackage("..ordering.application..")
+                .should().dependOnClassesThat()
+                .resideInAPackage("..ordering.infrastructure..")
+                .because("the use cases depend on the ports, and infrastructure implements them — "
+                        + "an arrow the other way makes the fakes in the unit tests a fiction")
                 .check(productionClasses);
     }
 
@@ -80,7 +92,8 @@ class ArchitectureTest {
                         "com.leopaul29.bento.mappers..",
                         "com.leopaul29.bento.security..",
                         "com.leopaul29.bento.config..",
-                        "..ordering.application..")
+                        "..ordering.application..",
+                        "..ordering.infrastructure..")
                 .because("the bento catalogue is a separate context, referenced by id through a "
                         + "port — and a domain that imports its own application layer has the "
                         + "dependency arrow backwards")
