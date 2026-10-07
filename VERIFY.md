@@ -12,6 +12,12 @@ One command, three places. That is the whole idea.
 If the three ever run different things, the gate is worthless — a push can be green
 locally and red in CI, and you stop trusting either. Keep them identical.
 
+**One deliberate exception.** CI has a second step, *"Integration tests must have run, not
+skipped"*, which reads `target/failsafe-reports/` and fails the build if any integration test
+was skipped. The persistence ITs are gated on Docker: skipping them is correct on a machine
+without it and a false green here, where nobody reads the output. The check cannot run locally
+for the same reason it is needed in CI — locally, skipping is the allowed outcome.
+
 ## Adding a project-specific check
 
 The generic checks (types, lint, tests) catch generic mistakes. The expensive bugs are
