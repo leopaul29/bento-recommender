@@ -32,9 +32,16 @@ class InvariantsDocumentationTest {
     private static final Pattern ROW =
             Pattern.compile("^\\|\\s*(I\\d+)\\s*\\|.*\\|\\s*`([A-Za-z0-9_]+)`\\s*\\|\\s*$");
 
-    /** These two test the documentation and the structure, not a numbered invariant. */
-    private static final Set<String> NOT_INVARIANT_TESTS =
-            Set.of("InvariantsDocumentationTest", "ArchitectureTest");
+    /**
+     * The packages an invariant can live in. Scoped rather than enumerated: a rule of the ordering
+     * domain is defended by the domain or by a use case, never by an adapter, so
+     * {@code ..ordering.infrastructure..} is out of scope — as are this test and
+     * {@code ArchitectureTest}, which sit in the root package and test the documentation and the
+     * structure rather than a numbered rule.
+     */
+    private static final List<String> INVARIANT_TEST_PACKAGES = List.of(
+            "com.leopaul29.bento.ordering.domain",
+            "com.leopaul29.bento.ordering.application");
 
     private record DocumentedInvariant(String id, String testMethod) {}
 
@@ -49,13 +56,11 @@ class InvariantsDocumentationTest {
                 .toList();
     }
 
-    private static Set<String> testMethodsInOrderingPackages() {
-        JavaClasses classes = new ClassFileImporter()
-                .importPackages("com.leopaul29.bento.ordering");
+    private static Set<String> testMethodsThatCouldPinAnInvariant() {
+        JavaClasses classes = new ClassFileImporter().importPackages(INVARIANT_TEST_PACKAGES);
 
         return classes.stream()
                 .filter(c -> c.getSimpleName().endsWith("Test"))
-                .filter(c -> !NOT_INVARIANT_TESTS.contains(c.getSimpleName()))
                 .flatMap(c -> c.getMethods().stream())
                 .filter(m -> m.isAnnotatedWith(org.junit.jupiter.api.Test.class))
                 .map(JavaMethod::getName)
@@ -66,7 +71,7 @@ class InvariantsDocumentationTest {
     @DisplayName("every documented invariant names a test that exists")
     void everyDocumentedInvariantNamesATestThatExists() throws IOException {
         List<DocumentedInvariant> documented = readTable();
-        Set<String> actual = testMethodsInOrderingPackages();
+        Set<String> actual = testMethodsThatCouldPinAnInvariant();
 
         assertThat(documented).as("INVARIANTS.md has no rows — the regex or the table changed")
                 .isNotEmpty();
@@ -91,8 +96,8 @@ class InvariantsDocumentationTest {
     }
 
     @Test
-    @DisplayName("no test in the ordering packages is undocumented")
-    void noTestInTheOrderingPackagesIsUndocumented() throws IOException {
+    @DisplayName("no domain or use-case test is undocumented")
+    void noDomainOrUseCaseTestIsUndocumented() throws IOException {
         Set<String> documented =
                 readTable().stream().map(DocumentedInvariant::testMethod).collect(Collectors.toSet());
 
@@ -117,15 +122,19 @@ class InvariantsDocumentationTest {
                 "anOrderIdWrapsAUuidAndComparesByIt",
                 "anOrderLineComparesByItsThreePartsAndPrintsThem",
                 "aLineRefusesToExistWithoutAllThreeParts",
-                "onlyCollectedAndCancelledAreTerminal");
+                "onlyCollectedAndCancelledAreTerminal",
+                // The persistence seam added in Phase 2.
+                "aRehydratedOrderIsTheOrderThatWasStored",
+                "rehydratingRefusesANullStatus",
+                "theStockSnapshotIsACopyACallerCannotChange");
 
-        Set<String> undocumented = new TreeSet<>(testMethodsInOrderingPackages());
+        Set<String> undocumented = new TreeSet<>(testMethodsThatCouldPinAnInvariant());
         undocumented.removeAll(documented);
         undocumented.removeAll(allowedExtras);
 
         assertThat(undocumented)
-                .as("these tests exist but no INVARIANTS.md row claims them — either add the row, "
-                        + "or list the test as a deliberate extra in this test")
+                .as("these domain or use-case tests exist but no INVARIANTS.md row claims them "
+                        + "— either add the row, or list the test as a deliberate extra here")
                 .isEmpty();
     }
 }
