@@ -188,6 +188,36 @@ class OrderingEndToEndIT {
     }
 
     @Test
+    @DisplayName("another customer can neither read nor cancel the order")
+    void anotherCustomerCannotTouchTheOrder() {
+        String owner = registerAndLogin("e2e-owner", "password123");
+        String stranger = registerAndLogin("e2e-stranger", "password123");
+
+        ResponseEntity<Map> placed = rest.exchange(
+                baseUrl + "/api/orders", HttpMethod.POST,
+                json(owner, Map.of("serviceDate", SERVICE_DATE.toString(),
+                        "items", java.util.List.of(Map.of("bentoId", karaageId, "quantity", 1)))),
+                Map.class);
+        assertThat(placed.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(placed.getBody()).isNotNull();
+        String orderId = (String) placed.getBody().get("id");
+
+        assertThat(rest.exchange(baseUrl + "/api/orders/" + orderId,
+                HttpMethod.GET, auth(stranger), Map.class).getStatusCode())
+                .isEqualTo(HttpStatus.FORBIDDEN);
+
+        assertThat(rest.exchange(baseUrl + "/api/orders/" + orderId + "/cancel",
+                HttpMethod.POST, auth(stranger), Map.class).getStatusCode())
+                .isEqualTo(HttpStatus.FORBIDDEN);
+
+        // And the order is untouched by the attempt.
+        ResponseEntity<Map> stillPlaced = rest.exchange(
+                baseUrl + "/api/orders/" + orderId, HttpMethod.GET, auth(owner), Map.class);
+        assertThat(stillPlaced.getBody()).isNotNull();
+        assertThat(stillPlaced.getBody().get("status")).isEqualTo("PLACED");
+    }
+
+    @Test
     @DisplayName("ordering without a token is refused")
     void orderingWithoutATokenIsRefused() {
         ResponseEntity<Map> response = rest.exchange(
