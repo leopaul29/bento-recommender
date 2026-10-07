@@ -9,11 +9,21 @@ import com.leopaul29.bento.repositories.IngredientRepository;
 import com.leopaul29.bento.repositories.TagRepository;
 import com.leopaul29.bento.repositories.UserRepository;
 import jakarta.annotation.PostConstruct;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
+/**
+ * Seeds dummy data for local development.
+ *
+ * <p>Excluded from the test profile: as an ungated {@code @Component} with
+ * {@code @PostConstruct} it ran inside every test context, so every test shared surprise state —
+ * which is how an integration test came to collide on a "vegan" tag it believed it had just
+ * created. Test fixtures should be built by the test that needs them.
+ */
 @Component
+@Profile("!test")
 public class DataInitializer {
 
     private final BentoRepository bentoRepository;

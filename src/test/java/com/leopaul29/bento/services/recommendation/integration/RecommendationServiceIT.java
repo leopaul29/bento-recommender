@@ -35,9 +35,7 @@ class RecommendationServiceIT {
 
     @Test
     void shouldReturnRecommendationsUsingDefaultStrategy() {
-        // DataInitializer is an ungated @Component, so every test context is already seeded
-        // with a "vegan" tag. Own tag name rather than collide with it.
-        Tag vegan = tagRepository.save(Tag.builder().name("it-vegan").build());
+        Tag vegan = tagRepository.save(Tag.builder().name("vegan").build());
         User user = userRepository.save(
                 User.builder()
                         .username("reco-it-user")
