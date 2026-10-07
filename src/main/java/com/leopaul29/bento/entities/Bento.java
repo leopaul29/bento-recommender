@@ -22,6 +22,13 @@ public class Bento {
 
     private int calorie;
 
+    /**
+     * Selling price in whole yen, or null for a bento that is not for sale. Read by the ordering
+     * context through its BentoCatalogue port and captured onto the order line at order time, so
+     * changing it here never alters an order already placed.
+     */
+    private Integer priceYen;
+
     @ManyToMany
     @JoinTable(
             name = "bento_ingredients",
@@ -44,6 +51,7 @@ public class Bento {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", calorie=" + calorie +
+                ", priceYen=" + priceYen +
                 ", ingredients=" + ingredients +
                 ", tags=" + tags +
                 '}';
@@ -53,11 +61,11 @@ public class Bento {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Bento bento = (Bento) o;
-        return calorie == bento.calorie && Objects.equals(id, bento.id) && Objects.equals(name, bento.name) && Objects.equals(description, bento.description) && Objects.equals(ingredients, bento.ingredients) && Objects.equals(tags, bento.tags);
+        return calorie == bento.calorie && Objects.equals(priceYen, bento.priceYen) && Objects.equals(id, bento.id) && Objects.equals(name, bento.name) && Objects.equals(description, bento.description) && Objects.equals(ingredients, bento.ingredients) && Objects.equals(tags, bento.tags);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, calorie, ingredients, tags);
+        return Objects.hash(id, name, description, calorie, priceYen, ingredients, tags);
     }
 }
