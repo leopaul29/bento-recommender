@@ -129,6 +129,14 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-crypto</artifactId>
         </dependency>
+        <!-- ArchUnit: makes the ordering boundary a check instead of a convention. A rule
+             nothing can fail on is decoration, so the domain's framework-freedom is asserted. -->
+        <dependency>
+            <groupId>com.tngtech.archunit</groupId>
+            <artifactId>archunit-junit5</artifactId>
+            <version>1.3.0</version>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
 
 	<build>
@@ -167,6 +175,67 @@
 						<goals>
 							<goal>integration-test</goal>
 							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- PIT mutation testing, scoped to the ordering domain.
+			     Line coverage says the code ran; a mutation score says the tests would NOTICE if
+			     it changed. PIT edits the bytecode (flips a <, drops a call, returns a constant)
+			     and counts how many edits a test catches. Bound to `verify`, so the threshold is
+			     a gate rather than a number in a report nobody opens. Scoped to the domain
+			     because that is where the invariants live and where a surviving mutant means a
+			     rule is not actually pinned. -->
+			<plugin>
+				<groupId>org.pitest</groupId>
+				<artifactId>pitest-maven</artifactId>
+				<version>1.17.0</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.pitest</groupId>
+						<artifactId>pitest-junit5-plugin</artifactId>
+						<version>1.2.2</version>
+					</dependency>
+					<!-- Pinned to the junit-platform version Spring Boot 3.5.4 brings (1.12.2).
+					     Surefire supplies its own launcher, so the test classpath has none, and
+					     PIT's minion then died with "OutputDirectoryProvider not available",
+					     which is what an unaligned launcher/engine pair looks like. -->
+					<dependency>
+						<groupId>org.junit.platform</groupId>
+						<artifactId>junit-platform-launcher</artifactId>
+						<version>1.12.2</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<targetClasses>
+						<param>com.leopaul29.bento.ordering.domain.*</param>
+						<param>com.leopaul29.bento.ordering.domain.events.*</param>
+					</targetClasses>
+					<targetTests>
+						<param>com.leopaul29.bento.ordering.domain.*</param>
+						<param>com.leopaul29.bento.ordering.application.*</param>
+					</targetTests>
+					<!-- The structural tests boot ArchUnit's class importer and read a Markdown
+					     file; they prove nothing about mutants and would be run once per mutant.
+					     Everything outside `ordering` is a @SpringBootTest, which the coverage
+					     minion cannot host. -->
+					<excludedTestClasses>
+						<param>com.leopaul29.bento.ordering.ArchitectureTest</param>
+						<param>com.leopaul29.bento.ordering.InvariantsDocumentationTest</param>
+					</excludedTestClasses>
+					<mutationThreshold>80</mutationThreshold>
+					<timestampedReports>false</timestampedReports>
+					<outputFormats>
+						<param>HTML</param>
+						<param>XML</param>
+					</outputFormats>
+				</configuration>
+				<executions>
+					<execution>
+						<id>mutation-coverage</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>mutationCoverage</goal>
 						</goals>
 					</execution>
 				</executions>
