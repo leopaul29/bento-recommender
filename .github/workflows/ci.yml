@@ -32,3 +32,35 @@ jobs:
       # -B for non-interactive, no colour codes in the log.
       - name: Verify
         run: ./mvnw -B verify
+
+      # CI-only, and deliberately so. The persistence ITs are gated on Docker being present:
+      # skipping is a convenience on a laptop without it and a false green here, where nobody
+      # reads the output. A skipped test and a passing test look identical in the run summary,
+      # so this step reads the Failsafe reports and refuses a build whose integration tests
+      # did not actually execute.
+      - name: Integration tests must have run, not skipped
+        run: |
+          python3 - <<'PY'
+          import glob, sys, xml.etree.ElementTree as ET
+
+          reports = sorted(glob.glob("target/failsafe-reports/TEST-*.xml"))
+          if not reports:
+              sys.exit("No Failsafe reports at all — the integration tests did not run.")
+
+          total, skipped_classes = 0, []
+          for path in reports:
+              suite = ET.parse(path).getroot()
+              tests = int(suite.get("tests", 0))
+              skipped = int(suite.get("skipped", 0))
+              total += tests - skipped
+              print(f"{suite.get('name')}: {tests} tests, {skipped} skipped")
+              if skipped:
+                  skipped_classes.append(f"{suite.get('name')} ({skipped} skipped)")
+
+          if skipped_classes:
+              sys.exit("Skipped integration tests in CI: " + ", ".join(skipped_classes)
+                       + ". Docker must be available here; a skip is a false green.")
+          if total == 0:
+              sys.exit("Every integration test was skipped or absent.")
+          print(f"OK: {total} integration tests executed.")
+          PY
