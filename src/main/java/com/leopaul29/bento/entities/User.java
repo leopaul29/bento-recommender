@@ -29,9 +29,11 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean enabled = true;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "user_role", nullable = false)
     private Role role = Role.USER;
