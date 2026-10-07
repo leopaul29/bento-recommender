@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import com.leopaul29.bento.ordering.domain.DomainRuleViolation;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -69,6 +70,25 @@ public class GlobalExceptionHandler {
                 .message("Request body is not valid JSON or cannot be parsed.")
                 .path(null)
                 .details(Map.of("cause", rootMessage(ex)))
+                .build();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(body);
+    }
+
+    @ExceptionHandler(DomainRuleViolation.class)
+    public ResponseEntity<ErrorResponse> handleDomainRuleViolation(DomainRuleViolation ex) {
+        // A rule of the ordering domain was broken by the request — the caller asked for
+        // something the domain refuses, which is a 400, not a server fault. Without this the
+        // catch-all below answers 500 for "that bento is not on today's menu".
+        ErrorResponse body = ErrorResponse.builder()
+                .timestamp(OffsetDateTime.now().toString())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error("Domain rule violation")
+                .message(ex.getMessage())
+                .path(null)
                 .build();
 
         return ResponseEntity
