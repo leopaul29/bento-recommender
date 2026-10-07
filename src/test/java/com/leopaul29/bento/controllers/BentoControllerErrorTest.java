@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -18,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @SpringBootTest
 @AutoConfigureMockMvc
+@WithMockUser
 public class BentoControllerErrorTest {
 
     private final static String BASE_URL = "/api/bentos";
@@ -62,6 +64,19 @@ public class BentoControllerErrorTest {
         mockMvc.perform(post(BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
-                .andExpect(status().isNotAcceptable());
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testCreateBentoAsNonAdminIsForbidden() throws Exception {
+        // Pins the GlobalExceptionHandler fix: the catch-all used to turn the
+        // @PreAuthorize("hasRole('ADMIN')") denial into a 500.
+        mockMvc.perform(post(BASE_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                        {"name":"X","description":"d","calorie":1,
+                         "ingredients":[{"name":"tofu"}],"tags":[{"name":"vegan"}]}
+                        """))
+                .andExpect(status().isForbidden());
     }
 }
